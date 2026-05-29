@@ -20,9 +20,12 @@
     "title": "[Bday] Kent",
     "season": "Spring",
     "day": "4",
-    "completed": false,
+    "completed": true,
     "subtasks": [
-      {"text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts", "done": "false"}
+      {
+        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
+        "done": "false"
+      }
     ]
   },
   {
@@ -32,7 +35,10 @@
     "day": "7",
     "completed": false,
     "subtasks": [
-      {"text": "Hot Pepper, Rabbit's Foot, Vegetable Medley", "done": "false"}
+      {
+        "text": "Hot Pepper, Rabbit's Foot, Vegetable Medley",
+        "done": "false"
+      }
     ]
   },
   {
@@ -42,7 +48,10 @@
     "day": "10",
     "completed": false,
     "subtasks": [
-      {"text": "Cranberry Candy, Pink Cake, Grape, Snail", "done": "false"}
+      {
+        "text": "Cranberry Candy, Pink Cake, Grape, Snail",
+        "done": "false"
+      }
     ]
   },
   {
@@ -52,7 +61,10 @@
     "day": "14",
     "completed": false,
     "subtasks": [
-      {"text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin", "done": "false"}
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
+        "done": "false"
+      }
     ]
   },
   {
@@ -62,7 +74,10 @@
     "day": "18",
     "completed": false,
     "subtasks": [
-      {"text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Piña Colada", "done": "false"}
+      {
+        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Piña Colada",
+        "done": "false"
+      }
     ]
   },
   {
@@ -72,7 +87,10 @@
     "day": "20",
     "completed": false,
     "subtasks": [
-      {"text": "Beer, Hot Pepper, Pepper Poppers, Pizza", "done": "false"}
+      {
+        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
+        "done": "false"
+      }
     ]
   },
   {
@@ -82,7 +100,10 @@
     "day": "26",
     "completed": false,
     "subtasks": [
-      {"text": "Fried Calamari, Rabbit's Foot, Prismatic Shard", "done": "false"}
+      {
+        "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
+        "done": "false"
+      }
     ]
   },
   {
@@ -92,7 +113,10 @@
     "day": "27",
     "completed": false,
     "subtasks": [
-      {"text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool", "done": "false"}
+      {
+        "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
+        "done": "false"
+      }
     ]
   },
   {
@@ -102,7 +126,10 @@
     "day": "4",
     "completed": false,
     "subtasks": [
-      {"text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot", "done": "false"}
+      {
+        "text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot",
+        "done": "false"
+      }
     ]
   },
   {
@@ -112,7 +139,10 @@
     "day": "8",
     "completed": false,
     "subtasks": [
-      {"text": "Diamond, Fish Taco, Orange", "done": "false"}
+      {
+        "text": "Diamond, Fish Taco, Orange",
+        "done": "false"
+      }
     ]
   },
   {
@@ -122,7 +152,10 @@
     "day": "10",
     "completed": false,
     "subtasks": [
-      {"text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry", "done": "false"}
+      {
+        "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
+        "done": "false"
+      }
     ]
   },
   {
@@ -132,7 +165,10 @@
     "day": "13",
     "completed": false,
     "subtasks": [
-      {"text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)", "done": "false"}
+      {
+        "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
+        "done": "false"
+      }
     ]
   },
   {
@@ -142,7 +178,10 @@
     "day": "17",
     "completed": false,
     "subtasks": [
-      {"text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot", "done": "false"}
+      {
+        "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
+        "done": "false"
+      }
     ]
   },
   {
@@ -152,7 +191,10 @@
     "day": "19",
     "completed": false,
     "subtasks": [
-      {"text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry", "done": "false"}
+      {
+        "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
+        "done": "false"
+      }
     ]
   },
   {
@@ -162,7 +204,10 @@
     "day": "22",
     "completed": false,
     "subtasks": [
-      {"text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz", "done": "false"}
+      {
+        "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
+        "done": "false"
+      }
     ]
   },
   {
@@ -172,7 +217,10 @@
     "day": "24",
     "completed": false,
     "subtasks": [
-      {"text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon", "done": "false"}
+      {
+        "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
+        "done": "false"
+      }
     ]
   },
   {
@@ -182,7 +230,10 @@
     "day": "26",
     "completed": false,
     "subtasks": [
-      {"text": "Duck Feather, Mango, Ostrich Egg, Poi.", "done": "false"}
+      {
+        "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": "false"
+      }
     ]
   },
   {
@@ -192,7 +243,10 @@
     "day": "2",
     "completed": false,
     "subtasks": [
-      {"text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup", "done": "false"}
+      {
+        "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
+        "done": "false"
+      }
     ]
   },
   {
@@ -202,7 +256,10 @@
     "day": "5",
     "completed": false,
     "subtasks": [
-      {"text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin", "done": "false"}
+      {
+        "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
+        "done": "false"
+      }
     ]
   },
   {
@@ -212,7 +269,10 @@
     "day": "11",
     "completed": false,
     "subtasks": [
-      {"text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley", "done": "false"}
+      {
+        "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
+        "done": "false"
+      }
     ]
   },
   {
@@ -222,7 +282,10 @@
     "day": "13",
     "completed": false,
     "subtasks": [
-      {"text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel", "done": "false"}
+      {
+        "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
+        "done": "false"
+      }
     ]
   },
   {
@@ -232,7 +295,10 @@
     "day": "15",
     "completed": false,
     "subtasks": [
-      {"text": "Crocus, Daffodil, Sweet Pea", "done": "false"}
+      {
+        "text": "Crocus, Daffodil, Sweet Pea",
+        "done": "false"
+      }
     ]
   },
   {
@@ -242,7 +308,10 @@
     "day": "18",
     "completed": false,
     "subtasks": [
-      {"text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot", "done": "false"}
+      {
+        "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
+        "done": "false"
+      }
     ]
   },
   {
@@ -252,7 +321,10 @@
     "day": "21",
     "completed": false,
     "subtasks": [
-      {"text": "Goat Cheese, Peach, Spaghetti", "done": "false"}
+      {
+        "text": "Goat Cheese, Peach, Spaghetti",
+        "done": "false"
+      }
     ]
   },
   {
@@ -262,7 +334,10 @@
     "day": "24",
     "completed": false,
     "subtasks": [
-      {"text": "Fried Mushroom, Leek", "done": "false"}
+      {
+        "text": "Fried Mushroom, Leek",
+        "done": "false"
+      }
     ]
   },
   {
@@ -272,7 +347,10 @@
     "day": "1",
     "completed": false,
     "subtasks": [
-      {"text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish", "done": "false"}
+      {
+        "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
+        "done": "false"
+      }
     ]
   },
   {
@@ -282,7 +360,10 @@
     "day": "3",
     "completed": false,
     "subtasks": [
-      {"text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams", "done": "false"}
+      {
+        "text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams",
+        "done": "false"
+      }
     ]
   },
   {
@@ -292,7 +373,10 @@
     "day": "7",
     "completed": false,
     "subtasks": [
-      {"text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea", "done": "false"}
+      {
+        "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
+        "done": "false"
+      }
     ]
   },
   {
@@ -302,7 +386,10 @@
     "day": "10",
     "completed": false,
     "subtasks": [
-      {"text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup", "done": "false"}
+      {
+        "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
+        "done": "false"
+      }
     ]
   },
   {
@@ -312,7 +399,10 @@
     "day": "14",
     "completed": false,
     "subtasks": [
-      {"text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)", "done": "false"}
+      {
+        "text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)",
+        "done": "false"
+      }
     ]
   },
   {
@@ -322,7 +412,10 @@
     "day": "17",
     "completed": false,
     "subtasks": [
-      {"text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence", "done": "false"}
+      {
+        "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
+        "done": "false"
+      }
     ]
   },
   {
@@ -332,7 +425,10 @@
     "day": "20",
     "completed": false,
     "subtasks": [
-      {"text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip", "done": "false"}
+      {
+        "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
+        "done": "false"
+      }
     ]
   },
   {
@@ -342,7 +438,10 @@
     "day": "23",
     "completed": false,
     "subtasks": [
-      {"text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine", "done": "false"}
+      {
+        "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
+        "done": "false"
+      }
     ]
   },
   {
@@ -352,7 +451,10 @@
     "day": "26",
     "completed": false,
     "subtasks": [
-      {"text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz", "done": "false"}
+      {
+        "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
+        "done": "false"
+      }
     ]
   }
 ]
