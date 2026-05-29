@@ -115,7 +115,7 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -128,7 +128,7 @@
     "subtasks": [
       {
         "text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -141,7 +141,7 @@
     "subtasks": [
       {
         "text": "Diamond, Fish Taco, Orange",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -154,7 +154,7 @@
     "subtasks": [
       {
         "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -167,7 +167,7 @@
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -180,7 +180,7 @@
     "subtasks": [
       {
         "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
-        "done": "false"
+        "done": false
       }
     ]
   },
