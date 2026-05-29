@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Valley Quest Log</title>
+    <!-- Drag and Drop Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f4e4bc;
+            --panel-bg: #fff8dc;
+            --border: #8b4513;
+            --text: #3e2723;
+            --accent: #4caf50;
+            --danger: #d32f2f;
+            --secondary: #ff9800;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: --bg-color;
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--panel-bg);
+            border: 4px solid var(--border);
+            padding: 20px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+        }
+
+        h1 { text-align: center; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input, select, button {
+            padding: 8px;
+            border: 2px solid var(--border);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: scale(0.95); }
+        button.secondary { background: var(--secondary); color: black; }
+        button.refresh-btn { background: #2196F3; }
+        button.login-btn { background: #6f42c1; color: white; }
+
+        .quest-section { margin-bottom: 30px; }
+        .section-title { 
+            border-bottom: 2px dashed var(--border); 
+            padding-bottom: 5px; 
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .quest-list { list-style: none; padding: 0; }
+        
+        .quest-item {
+            background: rgba(255,255,255,0.6);
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            padding: 10px;
+            position: relative;
+            cursor: grab;
+        }
+
+        .quest-item.dragging { opacity: 0.5; }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quest-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .quest-text { flex-grow: 1; font-weight: bold; }
+        
+        .quest-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-left: auto;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .subtasks {
+            margin-left: 30px;
+            margin-top: 10px;
+            border-left: 2px solid var(--border);
+            padding-left: 10px;
+        }
+
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .subtask-input {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .add-subtask-btn {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            background: #ddd;
+            color: #333;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .admin-panel {
+            background: #fff;
+            border: 2px solid var(--border);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .admin-panel.active { display: block; }
+
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-box {
+            background: var(--panel-bg);
+            padding: 30px;
+            border: 4px solid var(--border);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .login-box textarea {
+            width: 100%;
+            height: 80px;
+            margin: 10px 0;
+            font-family: monospace;
+            border: 2px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌾 Quest Log</h1>
+        <div id="status" class="status-msg">Loading...</div>
+
+        <!-- Admin Controls (Visible only when logged in) -->
+        <div id="adminPanel" class="admin-panel">
+            <h3>✏️ Editor Mode Active</h3>
+            <div class="controls">
+                <input type="text" id="newTaskInput" placeholder="New Quest Name...">
+                <select id="seasonSelect">
+                    <option value="">No Due Date</option>
+                    <option value="Spring">Spring</option>
+                    <option value="Summer">Summer</option>
+                    <option value="Fall">Fall</option>
+                    <option value="Winter">Winter</option>
+                </select>
+                <input type="number" id="dayInput" min="1" max="28" placeholder="Day" style="width: 60px;">
+                <button onclick="addTask()">Add Quest</button>
+                <button class="secondary" onclick="saveData()">💾 Save Changes</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="refresh-btn" onclick="fetchData()">🔄 Refresh</button>
+            <button class="login-btn" id="loginBtn" onclick="showLogin()">🔑 Login to Edit</button>
+            <div id="lockStatus" class="locked-msg" style="margin-left: 10px;">View Only</div>
+        </div>
+
+        <div class="quest-section">
+            <div class="section-title">Active Quests</div>
+            <ul id="activeList" class="quest-list"></ul>
+        </div>
+
+        <div class="quest-section">
+            <div class="section-title">Completed Quests</div>
+            <ul id="completedList" class="quest-list"></ul>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-box">
+            <h3>Login to Edit</h3>
+            <p>Paste your GitHub Personal Access Token below:</p>
+            <textarea id="tokenInput" placeholder="github_pat_..."></textarea>
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button onclick="saveToken()">Login</button>
+                <button class="danger" onclick="closeLogin()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const OWNER = 'YOUR_GITHUB_USERNAME'; // REPLACE THIS
+        const REPO = 'stardew-list';          // Your repo name
+        const FILE_PATH = 'quests.json';      // The data file
+
+        let currentData = [];
+        let authToken = localStorage.getItem('gh_token');
+        let isAdmin = !!authToken;
+        let sortableActive = null;
+
+        // --- DATA FETCHING ---
+        async function fetchData() {
+            const statusEl = document.getElementById('status');
+            statusEl.innerText = "Loading...";
+
+            try {
+                const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                const headers = {};
+                if (authToken) headers['Authorization'] = `token ${authToken}`;
+
+                const response = await fetch(url, { headers });
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        currentData = [];
+                        render();
+                        statusEl.innerText = "No quests found. Add some!";
+                        return;
+                    }
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const json = await response.json();
+                // Decode base64 content
+                const content = atob(json.content);
+                currentData = JSON.parse(content);
+                
+                render();
+                statusEl.innerText = `Loaded ${currentData.length} quests.`;
+            } catch (e) {
+                console.error(e);
+                statusEl.innerText = "Error loading data. Check network or token.";
+            }
+        }
+
+        // --- SAVING DATA ---
+        async function saveData() {
+            if (!authToken) return alert("You must login first!");
+
+            const statusEl = document.getElementById('status');
+            statusEl.innerText = "Saving...";
+
+            try {
+                // 1. Get current file info (SHA)
+                const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                const headers = { 'Authorization': `token ${authToken}` };
+                const getRes = await fetch(getUrl, { headers });
+                const fileInfo = await getRes.json();
+
+                // 2. Prepare new content
+                const newContent = btoa(JSON.stringify(currentData, null, 2));
+
+                // 3. Update file
+                const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                const putBody = {
+                    message: "Update quest log",
+                    content: newContent,
+                    sha: fileInfo.sha,
+                    branch: "main" // Ensure this matches your default branch (often 'main' or 'master')
+                };
+
+                const putRes = await fetch(putUrl, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify(putBody)
+                });
+
+                if (!putRes.ok) throw new Error("Save failed");
+
+                statusEl.innerText = "Saved successfully!";
+            } catch (e) {
+                console.error(e);
+                statusEl.innerText = "Save failed: " + e.message;
+            }
+        }
+
+        // --- UI LOGIC ---
+        function render() {
+            const activeList = document.getElementById('activeList');
+            const completedList = document.getElementById('completedList');
+            
+            activeList.innerHTML = '';
+            completedList.innerHTML = '';
+
+            const activeTasks = currentData.filter(t => !t.completed);
+            const completedTasks = currentData.filter(t => t.completed);
+
+            // Render Active
+            activeTasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'quest-item';
+                li.dataset.index = index; 
+                
+                const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
+                const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
+
+                li.innerHTML = `
+                    <div class="quest-header">
+                        <input type="checkbox" class="quest-checkbox" 
+                            ${shouldCheck ? 'checked' : ''} 
+                            ${isAdmin ? '' : 'disabled'}
+                            onchange="toggleTask(${index})">
+                        <span class="quest-text">${escapeHtml(task.title)}</span>
+                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
+                        ${isAdmin ? `<button class="danger" style="padding:2px 6px; font-size:0.8rem;" onclick="deleteTask(${index})">✕</button>` : ''}
+                    </div>
+                    <div class="subtasks" id="subtasks-${index}"></div>
+                    ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
+                `;
+                activeList.appendChild(li);
+                renderSubtasks(index, task.subtasks);
+            });
+
+            // Render Completed
+            completedTasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'quest-item';
+                li.style.opacity = '0.7';
+                li.innerHTML = `
+                    <div class="quest-header">
+                        <input type="checkbox" disabled checked>
+                        <span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>
+                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
+                        ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
+                    </div>
+                `;
+                completedList.appendChild(li);
+            });
+
+            if (isAdmin) initSortable();
+        }
+
+        function renderSubtasks(parentIndex, subtasks) {
+            const container = document.getElementById(`subtasks-${parentIndex}`);
+            if(!container) return;
+            
+            subtasks.forEach((st, stIndex) => {
+                const div = document.createElement('div');
+                div.className = 'subtask-item';
+                div.innerHTML = `
+                    <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtask(${parentIndex}, ${stIndex})">
+                    <span class="subtask-input">${escapeHtml(st.text)}</span>
+                    ${isAdmin ? `<button class="danger" style="padding:2px 5px; font-size:0.8rem;" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- ACTIONS ---
+        function addTask() {
+            const title = document.getElementById('newTaskInput').value;
+            const season = document.getElementById('seasonSelect').value;
+            const day = document.getElementById('dayInput').value;
+
+            if (!title) return alert("Enter a quest name!");
+
+            currentData.unshift({
+                id: Date.now().toString(),
+                title: title,
+                season: season,
+                day: day,
+                completed: false,
+                subtasks: []
+            });
+            
+            document.getElementById('newTaskInput').value = '';
+            render();
+            // Auto-save optional, but let's wait for explicit save button to avoid rate limits
+            document.getElementById('status').innerText = "Added (Click Save to commit)";
+        }
+
+        function toggleTask(index) {
+            const task = currentData[index];
+            if (!task.completed) {
+                if (task.subtasks.length > 0 && !task.subtasks.every(st => st.done)) {
+                    alert("Complete all subtasks first!");
+                    render(); 
+                    return;
+                }
+            }
+            task.completed = !task.completed;
+            render();
+        }
+
+        function restoreTask(completedIndex) {
+            let count = 0;
+            let targetTask = null;
+            for(let t of currentData) {
+                if(t.completed) {
+                    if(count === completedIndex) {
+                        targetTask = t;
+                        break;
+                    }
+                    count++;
+                }
+            }
+            if(targetTask) {
+                targetTask.completed = false;
+                render();
+            }
+        }
+
+        function deleteTask(index) {
+            if(confirm("Delete this quest?")) {
+                currentData.splice(index, 1);
+                render();
+            }
+        }
+
+        function addSubtask(parentIndex) {
+            currentData[parentIndex].subtasks.push({ text: "New subtask", done: false });
+            render();
+        }
+
+        function toggleSubtask(parentIndex, subIndex) {
+            currentData[parentIndex].subtasks[subIndex].done = !currentData[parentIndex].subtasks[subIndex].done;
+            render();
+        }
+
+        function updateSubtext(parentIndex, subIndex, val) {
+            currentData[parentIndex].subtasks[subIndex].text = val;
+            render();
+        }
+
+        function deleteSubtask(parentIndex, subIndex) {
+            currentData[parentIndex].subtasks.splice(subIndex, 1);
+            render();
+        }
+
+        // --- DRAG AND DROP ---
+        function initSortable() {
+            if(sortableActive) sortableActive.destroy();
+            sortableActive = Sortable.create(document.getElementById('activeList'), {
+                animation: 150,
+                ghostClass: 'dragging',
+                onEnd: function(evt) {
+                    const item = currentData.splice(evt.oldIndex, 1)[0];
+                    currentData.splice(evt.newIndex, 0, item);
+                    render();
+                }
+            });
+        }
+
+        // --- LOGIN LOGIC ---
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function saveToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token.startsWith('github_pat_')) {
+                localStorage.setItem('gh_token', token);
+                authToken = token;
+                isAdmin = true;
+                closeLogin();
+                updateUIState();
+                fetchData();
+            } else {
+                alert("Invalid token format. Must start with 'github_pat_'");
+            }
+        }
+
+        function updateUIState() {
+            const adminPanel = document.getElementById('adminPanel');
+            const loginBtn = document.getElementById('loginBtn');
+            const lockStatus = document.getElementById('lockStatus');
+
+            if (isAdmin) {
+                adminPanel.classList.add('active');
+                loginBtn.style.display = 'none';
+                lockStatus.innerText = "Editing Enabled";
+                lockStatus.style.color = "green";
+            } else {
+                adminPanel.classList.remove('active');
+                loginBtn.style.display = 'inline-block';
+                lockStatus.innerText = "View Only";
+                lockStatus.style.color = "#666";
+            }
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            updateUIState();
+            fetchData();
+        };
+    </script>
+</body>
+</html>
