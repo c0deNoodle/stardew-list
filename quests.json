@@ -232,7 +232,7 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
-        "done": "false"
+        "done": false
       }
     ]
   },
