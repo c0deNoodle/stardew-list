@@ -76,7 +76,7 @@
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Piña Colada",
-        "done": "false"
+        "done": false
       }
     ]
   },
