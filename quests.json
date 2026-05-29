@@ -310,7 +310,7 @@
     "subtasks": [
       {
         "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
-        "done": "false"
+        "done": false
       }
     ]
   },
