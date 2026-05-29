@@ -414,7 +414,7 @@
     "subtasks": [
       {
         "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -427,7 +427,7 @@
     "subtasks": [
       {
         "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -440,7 +440,7 @@
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
-        "done": "false"
+        "done": false
       }
     ]
   },
