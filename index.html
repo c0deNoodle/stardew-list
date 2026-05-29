@@ -108,15 +108,27 @@
             flex-grow: 1;
             font-weight: bold;
             border: 1px dashed transparent;
-            padding: 2px;
+            padding: 2px 4px;
             background: transparent;
-            width: 100%;
+            min-width: 0;
             color: var(--text);
+            /* Multiline with ellipsis */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-word;
+            line-height: 1.4;
+            cursor: text;
         }
         .editable-title:focus {
             border-color: var(--border);
             background: #fff;
             outline: none;
+            /* When editing, show full text */
+            -webkit-line-clamp: unset;
+            overflow: visible;
         }
 
         .quest-meta {
@@ -446,7 +458,7 @@
                             ${isAdmin ? '' : 'disabled'}
                             onchange="toggleTask(${index})">
                         ${isAdmin ? 
-                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
+                            `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                             `<span class="quest-text">${escapeHtml(task.title)}</span>`
                         }
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
