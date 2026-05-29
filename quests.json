@@ -5,6 +5,11 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": []
+    "subtasks": [
+      {
+        "text": "",
+        "done": false
+      }
+    ]
   }
 ]
