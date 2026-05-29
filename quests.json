@@ -323,7 +323,7 @@
     "subtasks": [
       {
         "text": "Goat Cheese, Peach, Spaghetti",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -336,7 +336,7 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
-        "done": "false"
+        "done": false
       }
     ]
   },
