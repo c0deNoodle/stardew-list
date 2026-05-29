@@ -63,7 +63,7 @@
     "subtasks": [
       {
         "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
-        "done": "false"
+        "done": false
       }
     ]
   },
