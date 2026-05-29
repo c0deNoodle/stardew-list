@@ -37,7 +37,7 @@
     "subtasks": [
       {
         "text": "Hot Pepper, Rabbit's Foot, Vegetable Medley",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -50,7 +50,7 @@
     "subtasks": [
       {
         "text": "Cranberry Candy, Pink Cake, Grape, Snail",
-        "done": "false"
+        "done": false
       }
     ]
   },
