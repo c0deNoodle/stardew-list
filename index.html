@@ -102,7 +102,6 @@
             cursor: pointer;
         }
 
-        /* Editable Title Styling */
         .editable-title {
             flex-grow: 1;
             font-weight: bold;
@@ -161,7 +160,6 @@
             color: #333;
         }
 
-        /* Status Indicator Styles */
         .status-container {
             text-align: center;
             margin-bottom: 10px;
@@ -192,13 +190,16 @@
         .admin-panel.active { display: block; }
 
         .login-modal {
-            display: none;
+            display: none !important;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
             justify-content: center;
             align-items: center;
+        }
+        .login-modal.show {
+            display: flex !important;
         }
         .login-box {
             background: var(--panel-bg);
@@ -207,6 +208,8 @@
             text-align: center;
             max-width: 400px;
             width: 90%;
+            position: relative;
+            z-index: 10001;
         }
         .login-box textarea {
             width: 100%;
@@ -214,6 +217,7 @@
             margin: 10px 0;
             font-family: monospace;
             border: 2px solid var(--border);
+            padding: 8px;
         }
     </style>
 </head>
@@ -227,7 +231,6 @@
             <span id="autosaveStatus" class="autosave-status idle">💾 Autosave on</span>
         </div>
 
-        <!-- Admin Controls -->
         <div id="adminPanel" class="admin-panel">
             <h3>✏️ Editor Mode Active</h3>
             <div class="controls">
@@ -261,25 +264,27 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="login-modal">
         <div class="login-box">
             <h3>Login to Edit</h3>
             <p>Paste your GitHub Personal Access Token below:</p>
             <textarea id="tokenInput" placeholder="github_pat_..."></textarea>
-            <div style="display:flex; gap:10px; justify-content:center;">
+            <div style="display:flex; gap:10px; justify-content:center; margin-top: 10px;">
                 <button onclick="saveToken()">Login</button>
                 <button class="danger" onclick="closeLogin()">Cancel</button>
             </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 15px;">
+                Token starts with: <code>github_pat_</code>
+            </p>
         </div>
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'c0deNoodle'; // Your Github username
+        const OWNER = 'c0deNoodle';           // Your Github username
         const REPO = 'stardew-list';          // Your repo name
         const FILE_PATH = 'quests.json';      // The data file
-        const BRANCH = 'main'; // CHANGE TO 'master' IF NEEDED
+        const BRANCH = 'main';
 
         let currentData = [];
         let authToken = localStorage.getItem('gh_token');
@@ -307,7 +312,6 @@
                 autosaveStatus.style.display = 'inline-block';
                 autosaveStatus.innerText = "💾 Autosave complete";
                 autosaveStatus.className = "autosave-status complete";
-                // Fade out after 2 seconds
                 setTimeout(() => {
                     if(autosaveStatus.innerText.includes("complete")) {
                         setStatus('idle');
@@ -330,13 +334,9 @@
         function triggerAutosave() {
             if (!isAdmin) return;
             
-            // Clear existing timeout
             if (saveTimeout) clearTimeout(saveTimeout);
-            
-            // Set status to saving
             setStatus('saving');
 
-            // Wait 1 second before saving (debounce)
             saveTimeout = setTimeout(async () => {
                 await saveData();
             }, 1000);
@@ -383,189 +383,3 @@
                 const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
                 const headers = { 'Authorization': `token ${authToken}` };
                 const getRes = await fetch(getUrl, { headers });
-                
-                if (!getRes.ok) {
-                    // If file doesn't exist, create it
-                    const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                    const putBody = {
-                        message: "Create quest log",
-                        content: newContent,
-                        branch: BRANCH
-                    };
-                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                } else {
-                    const fileInfo = await getRes.json();
-                    const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                    const putBody = {
-                        message: "Update quest log",
-                        content: newContent,
-                        sha: fileInfo.sha,
-                        branch: BRANCH
-                    };
-                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                }
-
-                setStatus('complete');
-            } catch (e) {
-                console.error(e);
-                setStatus('error', "Save failed: " + e.message);
-            }
-        }
-
-        // --- UI LOGIC ---
-        function render() {
-            const activeList = document.getElementById('activeList');
-            const completedList = document.getElementById('completedList');
-            
-            activeList.innerHTML = '';
-            completedList.innerHTML = '';
-
-            const activeTasks = currentData.filter(t => !t.completed);
-            const completedTasks = currentData.filter(t => t.completed);
-
-            // Render Active
-            activeTasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                li.className = 'quest-item';
-                li.dataset.index = index; 
-                
-                const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
-                const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
-
-                li.innerHTML = `
-                    <div class="quest-header">
-                        <input type="checkbox" class="quest-checkbox" 
-                            ${shouldCheck ? 'checked' : ''} 
-                            ${isAdmin ? '' : 'disabled'}
-                            onchange="toggleTask(${index})">
-                        ${isAdmin ? 
-                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
-                            `<span class="quest-text">${escapeHtml(task.title)}</span>`
-                        }
-                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="danger" style="padding:2px 6px; font-size:0.8rem;" onclick="deleteTask(${index})">✕</button>` : ''}
-                    </div>
-                    <div class="subtasks" id="subtasks-${index}"></div>
-                    ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
-                `;
-                activeList.appendChild(li);
-                renderSubtasks(index, task.subtasks);
-            });
-
-            // Render Completed
-            completedTasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                li.className = 'quest-item';
-                li.style.opacity = '0.7';
-                li.innerHTML = `
-                    <div class="quest-header">
-                        <input type="checkbox" disabled checked>
-                        ${isAdmin ? 
-                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
-                            `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
-                        }
-                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
-                    </div>
-                `;
-                completedList.appendChild(li);
-            });
-
-            if (isAdmin) initSortable();
-        }
-
-        function renderSubtasks(parentIndex, subtasks) {
-            const container = document.getElementById(`subtasks-${parentIndex}`);
-            if(!container) return;
-            
-            subtasks.forEach((st, stIndex) => {
-                const div = document.createElement('div');
-                div.className = 'subtask-item';
-                div.innerHTML = `
-                    <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtask(${parentIndex}, ${stIndex})">
-                    ${isAdmin ? 
-                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtext(${parentIndex}, ${stIndex}, this.value)">` : 
-                        `<span class="subtask-input">${escapeHtml(st.text)}</span>`
-                    }
-                    ${isAdmin ? `<button class="danger" style="padding:2px 5px; font-size:0.8rem;" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // --- ACTIONS ---
-        function addTask() {
-            const title = document.getElementById('newTaskInput').value;
-            const season = document.getElementById('seasonSelect').value;
-            const day = document.getElementById('dayInput').value;
-
-            if (!title) return alert("Enter a quest name!");
-
-            currentData.unshift({
-                id: Date.now().toString(),
-                title: title,
-                season: season,
-                day: day,
-                completed: false,
-                subtasks: []
-            });
-            
-            document.getElementById('newTaskInput').value = '';
-            render();
-            triggerAutosave();
-        }
-
-        function toggleTask(index) {
-            const task = currentData[index];
-            if (!task.completed) {
-                if (task.subtasks.length > 0 && !task.subtasks.every(st => st.done)) {
-                    alert("Complete all subtasks first!");
-                    render(); 
-                    return;
-                }
-            }
-            task.completed = !task.completed;
-            render();
-            triggerAutosave();
-        }
-
-        function restoreTask(completedIndex) {
-            let count = 0;
-            let targetTask = null;
-            for(let t of currentData) {
-                if(t.completed) {
-                    if(count === completedIndex) {
-                        targetTask = t;
-                        break;
-                    }
-                    count++;
-                }
-            }
-            if(targetTask) {
-                targetTask.completed = false;
-                render();
-                triggerAutosave();
-            }
-        }
-
-        function deleteTask(index) {
-            if(confirm("Delete this quest?")) {
-                currentData.splice(index, 1);
-                render();
-                triggerAutosave();
-            }
-        }
-
-        function addSubtask(parentIndex) {
-            // Add empty subtask
-            currentData[parentIndex].subtasks.push({ text: "", done: false });
-            render();
-            // Focus the new input
