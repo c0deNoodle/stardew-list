@@ -349,7 +349,7 @@
     "subtasks": [
       {
         "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
-        "done": "false"
+        "done": false
       }
     ]
   },
