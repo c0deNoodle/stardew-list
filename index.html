@@ -489,10 +489,9 @@
                 li.className = 'quest-item';
                 li.dataset.index = index; 
                 
-                const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
-                const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
+                // Logic: Main task completion is independent of subtasks
+                const shouldCheck = task.completed;
 
-                // NEW LOGIC: onfocus stores original text, onblur checks for empty
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" class="quest-checkbox" 
@@ -626,13 +625,7 @@
 
         function toggleTask(index) {
             const task = currentData[index];
-            if (!task.completed) {
-                if (task.subtasks.length > 0 && !task.subtasks.every(st => st.done)) {
-                    alert("Complete all subtasks first!");
-                    render(); 
-                    return;
-                }
-            }
+            // Logic Change: No longer checks subtasks before toggling
             task.completed = !task.completed;
             render();
             triggerAutosave();
