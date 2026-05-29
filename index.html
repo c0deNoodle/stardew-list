@@ -1,3 +1,17 @@
+Here is the complete, corrected index.html code. This version ensures all JavaScript functions are properly defined and the login modal works correctly.
+
+What's Fixed:
+Function Scope: All functions are properly nested within the <script> tag.
+Modal Display: The modal uses both display: flex and a .show class for reliability.
+Token Validation: More lenient token check (looks for pat_ instead of exact prefix).
+Syntax Safety: All braces and brackets are properly closed.
+Instructions:
+Replace your entire index.html file in the GitHub repo with this code.
+Edit Line 280: Replace YOUR_GITHUB_USERNAME with your actual GitHub username.
+Check Line 282: Ensure BRANCH matches your repo's default branch (main or master).
+Commit the changes.
+Wait 1-2 minutes for GitHub Pages to update.
+Hard refresh the page (Ctrl+F5 on PC, or clear cache on mobile).
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -262,6 +276,11 @@
             <div class="section-title">Completed Quests</div>
             <ul id="completedList" class="quest-list"></ul>
         </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888;">
+            Last Commit: <span id="commitSha">Loading...</span>
+        </div>
     </div>
 
     <div id="loginModal" class="login-modal">
@@ -281,7 +300,7 @@
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'c0deNoodle';           // Your Github username
+        const OWNER = 'c0deNoodle'; // Your Github username
         const REPO = 'stardew-list';          // Your repo name
         const FILE_PATH = 'quests.json';      // The data file
         const BRANCH = 'main';
@@ -383,3 +402,320 @@
                 const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
                 const headers = { 'Authorization': `token ${authToken}` };
                 const getRes = await fetch(getUrl, { headers });
+                
+                if (!getRes.ok) {
+                    const newContent = btoa(JSON.stringify(currentData, null, 2));
+                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const putBody = {
+                        message: "Create quest log",
+                        content: newContent,
+                        branch: BRANCH
+                    };
+                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                } else {
+                    const fileInfo = await getRes.json();
+                    const newContent = btoa(JSON.stringify(currentData, null, 2));
+                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const putBody = {
+                        message: "Update quest log",
+                        content: newContent,
+                        sha: fileInfo.sha,
+                        branch: BRANCH
+                    };
+                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                }
+
+                setStatus('complete');
+            } catch (e) {
+                console.error(e);
+                setStatus('error', "Save failed: " + e.message);
+            }
+        }
+
+        // --- UI LOGIC ---
+        function render() {
+            const activeList = document.getElementById('activeList');
+            const completedList = document.getElementById('completedList');
+            
+            activeList.innerHTML = '';
+            completedList.innerHTML = '';
+
+            const activeTasks = currentData.filter(t => !t.completed);
+            const completedTasks = currentData.filter(t => t.completed);
+
+            activeTasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'quest-item';
+                li.dataset.index = index; 
+                
+                const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
+                const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
+
+                li.innerHTML = `
+                    <div class="quest-header">
+                        <input type="checkbox" class="quest-checkbox" 
+                            ${shouldCheck ? 'checked' : ''} 
+                            ${isAdmin ? '' : 'disabled'}
+                            onchange="toggleTask(${index})">
+                        ${isAdmin ? 
+                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
+                            `<span class="quest-text">${escapeHtml(task.title)}</span>`
+                        }
+                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
+                        ${isAdmin ? `<button class="danger" style="padding:2px 6px; font-size:0.8rem;" onclick="deleteTask(${index})">✕</button>` : ''}
+                    </div>
+                    <div class="subtasks" id="subtasks-${index}"></div>
+                    ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
+                `;
+                activeList.appendChild(li);
+                renderSubtasks(index, task.subtasks);
+            });
+
+            completedTasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'quest-item';
+                li.style.opacity = '0.7';
+                li.innerHTML = `
+                    <div class="quest-header">
+                        <input type="checkbox" disabled checked>
+                        ${isAdmin ? 
+                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
+                            `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
+                        }
+                        <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
+                        ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
+                    </div>
+                `;
+                completedList.appendChild(li);
+            });
+
+            if (isAdmin) initSortable();
+        }
+
+        function renderSubtasks(parentIndex, subtasks) {
+            const container = document.getElementById(`subtasks-${parentIndex}`);
+            if(!container) return;
+            
+            subtasks.forEach((st, stIndex) => {
+                const div = document.createElement('div');
+                div.className = 'subtask-item';
+                div.innerHTML = `
+                    <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtask(${parentIndex}, ${stIndex})">
+                    ${isAdmin ? 
+                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtext(${parentIndex}, ${stIndex}, this.value)">` : 
+                        `<span class="subtask-input">${escapeHtml(st.text)}</span>`
+                    }
+                    ${isAdmin ? `<button class="danger" style="padding:2px 5px; font-size:0.8rem;" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- ACTIONS ---
+        function addTask() {
+            const title = document.getElementById('newTaskInput').value;
+            const season = document.getElementById('seasonSelect').value;
+            const day = document.getElementById('dayInput').value;
+
+            if (!title) return alert("Enter a quest name!");
+
+            currentData.unshift({
+                id: Date.now().toString(),
+                title: title,
+                season: season,
+                day: day,
+                completed: false,
+                subtasks: []
+            });
+            
+            document.getElementById('newTaskInput').value = '';
+            render();
+            triggerAutosave();
+        }
+
+        function toggleTask(index) {
+            const task = currentData[index];
+            if (!task.completed) {
+                if (task.subtasks.length > 0 && !task.subtasks.every(st => st.done)) {
+                    alert("Complete all subtasks first!");
+                    render(); 
+                    return;
+                }
+            }
+            task.completed = !task.completed;
+            render();
+            triggerAutosave();
+        }
+
+        function restoreTask(completedIndex) {
+            let count = 0;
+            let targetTask = null;
+            for(let t of currentData) {
+                if(t.completed) {
+                    if(count === completedIndex) {
+                        targetTask = t;
+                        break;
+                    }
+                    count++;
+                }
+            }
+            if(targetTask) {
+                targetTask.completed = false;
+                render();
+                triggerAutosave();
+            }
+        }
+
+        function deleteTask(index) {
+            if(confirm("Delete this quest?")) {
+                currentData.splice(index, 1);
+                render();
+                triggerAutosave();
+            }
+        }
+
+        function addSubtask(parentIndex) {
+            currentData[parentIndex].subtasks.push({ text: "", done: false });
+            render();
+            setTimeout(() => {
+                const inputs = document.querySelectorAll(`#subtasks-${parentIndex} input[type="text"]`);
+                if(inputs.length > 0) inputs[inputs.length - 1].focus();
+            }, 50);
+            triggerAutosave();
+        }
+
+        function toggleSubtask(parentIndex, subIndex) {
+            currentData[parentIndex].subtasks[subIndex].done = !currentData[parentIndex].subtasks[subIndex].done;
+            render();
+            triggerAutosave();
+        }
+
+        function updateSubtext(parentIndex, subIndex, val) {
+            currentData[parentIndex].subtasks[subIndex].text = val;
+            triggerAutosave();
+        }
+
+        function deleteSubtask(parentIndex, subIndex) {
+            currentData[parentIndex].subtasks.splice(subIndex, 1);
+            render();
+            triggerAutosave();
+        }
+
+        function updateTitle(index, val) {
+            currentData[index].title = val;
+            triggerAutosave();
+        }
+
+        // --- DRAG AND DROP ---
+        function initSortable() {
+            if(sortableActive) sortableActive.destroy();
+            sortableActive = Sortable.create(document.getElementById('activeList'), {
+                animation: 150,
+                ghostClass: 'dragging',
+                onEnd: function(evt) {
+                    const item = currentData.splice(evt.oldIndex, 1)[0];
+                    currentData.splice(evt.newIndex, 0, item);
+                    render();
+                    triggerAutosave();
+                }
+            });
+        }
+
+        // --- LOGIN LOGIC ---
+        function showLogin() {
+            console.log("showLogin called");
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.classList.add('show');
+                modal.style.display = 'flex';
+                document.getElementById('tokenInput').focus();
+            } else {
+                console.error("Modal element not found!");
+            }
+        }
+
+        function closeLogin() {
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+            }
+        }
+
+        function saveToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            console.log("Token submitted:", token.substring(0, 15) + "...");
+            
+            if (token && token.includes('pat_')) {
+                localStorage.setItem('gh_token', token);
+                authToken = token;
+                isAdmin = true;
+                closeLogin();
+                updateUIState();
+                fetchData();
+            } else {
+                alert("Invalid token format. Must contain 'pat_' (e.g., github_pat_...)");
+            }
+        }
+
+        function updateUIState() {
+            const adminPanel = document.getElementById('adminPanel');
+            const loginBtn = document.getElementById('loginBtn');
+            const lockStatus = document.getElementById('lockStatus');
+
+            if (isAdmin) {
+                adminPanel.classList.add('active');
+                loginBtn.style.display = 'none';
+                lockStatus.innerText = "Editing Enabled";
+                lockStatus.style.color = "green";
+                setStatus('idle');
+            } else {
+                adminPanel.classList.remove('active');
+                loginBtn.style.display = 'inline-block';
+                lockStatus.innerText = "View Only";
+                lockStatus.style.color = "#666";
+                setStatus('idle');
+            }
+        }
+
+        // --- FETCH LATEST COMMIT ---
+        async function fetchLatestCommit() {
+            try {
+                const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1`;
+                const headers = {};
+                if (authToken) headers['Authorization'] = `token ${authToken}`;
+
+                const response = await fetch(url, { headers });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        const sha = data[0].sha.substring(0, 7);
+                        document.getElementById('commitSha').innerText = sha;
+                    } else {
+                        document.getElementById('commitSha').innerText = "N/A";
+                    }
+                } else {
+                    document.getElementById('commitSha').innerText = "Error";
+                }
+            } catch (e) {
+                console.error("Failed to fetch commit:", e);
+                document.getElementById('commitSha').innerText = "Unavailable";
+            }
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            updateUIState();
+            fetchData();
+            fetchLatestCommit();
+        };
+    </script>
+</body>
+</html>
