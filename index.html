@@ -7,6 +7,10 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+Here is the complete, updated <style> section. It includes the new classes for the status indicators (.status-pending and .status-updated) and ensures the layout remains consistent with the rest of your app.
+
+You can replace your entire existing <style> block (from <style> to </style>) with this code:
 
     <style>
         :root {
@@ -515,7 +519,7 @@
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="delete-btn" onclick="deleteTask(${index})">✕</button>` : ''}
+                        ${isAdmin ? `<button class="delete-btn" onclick="deleteTask('${task.id}')">✕</button>` : ''}
                     </div>
                     <div class="subtasks" id="subtasks-${index}"></div>
                     ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
@@ -632,11 +636,14 @@
             }
         }
 
-        function deleteTask(index) {
+        function deleteTask(taskId) {
             if(confirm("Delete this quest?")) {
-                currentData.splice(index, 1);
-                render();
-                triggerAutosave();
+                const index = currentData.findIndex(t => t.id === taskId);
+                if (index !== -1) {
+                    currentData.splice(index, 1);
+                    render();
+                    triggerAutosave();
+                }
             }
         }
 
@@ -736,12 +743,12 @@
                 // 3. Compare and Format
                 if (liveSha === latestSha) {
                     // MATCH: Updated
-                    statusSpan.innerText = `Updated ✔ (Current SHA: ${liveSha})`;
+                    statusSpan.innerText = `Updated ✔ (Commit: ${liveSha})`;
                     statusSpan.className = "status-updated";
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // MISMATCH: Pending
-                    statusSpan.innerText = `⚠️ Pending update (Current SHA: ${liveSha} - Pending SHA: ${latestSha})`;
+                    statusSpan.innerText = `⚠️ Pending update (Commit: ${liveSha} - Pending Commit: ${latestSha})`;
                     statusSpan.className = "status-pending";
                     
                     // Show the banner
