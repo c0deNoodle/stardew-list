@@ -193,7 +193,7 @@
     "subtasks": [
       {
         "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -206,7 +206,7 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -219,7 +219,7 @@
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
-        "done": "false"
+        "done": false
       }
     ]
   },
