@@ -453,7 +453,7 @@
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
-        "done": "false"
+        "done": false
       }
     ]
   }
