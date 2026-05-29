@@ -8,6 +8,10 @@
     <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
+Here is the complete, updated <style> section. It includes the new classes for the status indicators (.status-pending and .status-updated) and ensures the layout remains consistent with the rest of your app.
+
+You can replace your entire existing <style> block (from <style> to </style>) with this code:
+
     <style>
         :root {
             --bg-color: #f4e4bc;
@@ -97,7 +101,7 @@
         .quest-header {
             display: flex;
             align-items: center;
-            gap: 8px; /* Reduced gap slightly */
+            gap: 8px;
             width: 100%;
         }
 
@@ -108,10 +112,9 @@
             flex-shrink: 0;
         }
 
-        /* FIXED: Wrapper takes all remaining space */
         .editable-title-wrapper {
-            flex: 1 1 0; /* Grow, Shrink, Basis 0 */
-            min-width: 0; /* Critical for flex text truncation */
+            flex: 1 1 0;
+            min-width: 0;
             display: flex;
             align-items: center;
         }
@@ -142,7 +145,6 @@
             white-space: nowrap;
         }
 
-        /* FIXED: Delete button hidden by default */
         .delete-btn {
             display: none;
             padding: 2px 6px;
@@ -156,7 +158,6 @@
             margin-left: 5px;
         }
 
-        /* FIXED: Show delete button when parent has 'editing' class */
         .quest-item.editing .delete-btn {
             display: inline-block;
         }
@@ -225,6 +226,7 @@
             margin-bottom: 10px;
             border-radius: 4px;
             font-size: 0.9rem;
+            line-height: 1.4;
         }
 
         .admin-panel {
@@ -266,6 +268,16 @@
             font-family: monospace;
             border: 2px solid var(--border);
             padding: 8px;
+        }
+
+        /* NEW: Status Indicator Styles */
+        .status-updated {
+            color: var(--success);
+            font-weight: bold;
+        }
+        .status-pending {
+            color: var(--danger);
+            font-weight: bold;
         }
     </style>
 </head>
@@ -317,7 +329,7 @@
 
         <!-- Footer -->
         <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888;">
-            Last Commit: <span id="commitSha">Loading...</span>
+            Last Commit — <span id="pageStatus">Loading...</span>
         </div>
     </div>
 
@@ -679,67 +691,73 @@
             });
         }
 
-        // --- FETCH LATEST COMMIT (FIXED) ---
-        async function fetchLatestCommit() {
-            const shaDisplay = document.getElementById('commitSha');
-            shaDisplay.innerText = "Checking...";
+        // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
+        async function fetchPageStatus() {
+            const statusSpan = document.getElementById('pageStatus');
+            statusSpan.innerText = "Checking...";
+            statusSpan.className = ""; // Reset classes
 
             try {
-                const timestamp = Date.now();
-                
-                // 1. Try to get commits for the specific file first
-                let url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1&_t=${timestamp}`;
-                
+                // 1. Fetch the LATEST commit on the main branch (Repository HEAD)
+                const latestCommitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
                     'User-Agent': 'StardewQuestLog'
                 };
                 if (authToken) headers['Authorization'] = `token ${authToken}`;
 
-                console.log("Fetching file commits:", url);
-                
-                let response = await fetch(url, { 
-                    headers, 
-                    cache: 'no-store',
-                    mode: 'cors'
-                });
-                
-                let data = [];
-                if (response.ok) {
-                    data = await response.json();
-                }
+                const latestRes = await fetch(latestCommitUrl, { headers, cache: 'no-store' });
+                if (!latestRes.ok) throw new Error("Failed to fetch latest commit");
+                const latestData = await latestRes.json();
+                const latestSha = latestData[0].sha.substring(0, 7);
 
-                let sha = null;
+                // 2. Fetch the GITHUB PAGES DEPLOYMENTS
+                // This returns a list of deployments. We need the one with state: "success"
+                const deploymentsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/pages/deployments?per_page=1&_t=${Date.now()}`;
+                const deployRes = await fetch(deploymentsUrl, { headers, cache: 'no-store' });
+                
+                let liveSha = null;
+                let isPending = false;
 
-                // 2. If no file commits, get the latest branch commit (Fallback)
-                if (!data || data.length === 0) {
-                    console.warn("No commits for file, fetching branch head...");
-                    const fallbackUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${timestamp}`;
-                    const fallbackRes = await fetch(fallbackUrl, { headers, cache: 'no-store' });
+                if (deployRes.ok) {
+                    const deployments = await deployRes.json();
+                    // Find the most recent SUCCESSFUL deployment
+                    const successDeploy = deployments.find(d => d.state === 'success');
                     
-                    if (fallbackRes.ok) {
-                        const fallbackData = await fallbackRes.json();
-                        if (fallbackData && fallbackData.length > 0) {
-                            sha = fallbackData[0].sha.substring(0, 7);
-                            console.log("Using branch head commit:", sha);
-                        }
+                    if (successDeploy) {
+                        liveSha = successDeploy.sha.substring(0, 7);
+                    } else {
+                        // If no successful deployment found yet (brand new repo?), fallback to latest
+                        liveSha = latestSha; 
+                        isPending = true;
                     }
                 } else {
-                    sha = data[0].sha.substring(0, 7);
-                    console.log("Using file commit:", sha);
+                    // If API fails (e.g., no token scope), fallback to latest
+                    console.warn("Could not fetch deployment status. Assuming latest is live.");
+                    liveSha = latestSha;
                 }
 
-                if (sha) {
-                    shaDisplay.innerText = sha;
-                    checkForUpdates(sha);
+                // 3. Compare and Format
+                if (liveSha === latestSha) {
+                    // MATCH: Updated
+                    statusSpan.innerText = `Updated ✔ (Current SHA: ${liveSha})`;
+                    statusSpan.className = "status-updated";
+                    document.getElementById('updateBanner').style.display = 'none';
                 } else {
-                    shaDisplay.innerText = "Err";
-                    console.error("Could not find any commits.");
+                    // MISMATCH: Pending
+                    statusSpan.innerText = `⚠️ Pending update (Current SHA: ${liveSha} - Pending SHA: ${latestSha})`;
+                    statusSpan.className = "status-pending";
+                    
+                    // Show the banner
+                    const banner = document.getElementById('updateBanner');
+                    banner.style.display = 'block';
+                    banner.innerHTML = `⚠️ New commit detected. GitHub Pages is deploying. <br>Please refresh in 1-2 minutes to see changes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
                 }
 
             } catch (e) {
-                console.error("Failed to fetch commit:", e);
-                shaDisplay.innerText = "Err";
+                console.error("Status check failed:", e);
+                statusSpan.innerText = "Error checking status";
+                statusSpan.className = "";
             }
         }
 
@@ -818,7 +836,7 @@
         window.onload = function() {
             updateUIState();
             fetchData();
-            fetchLatestCommit();
+            fetchPageStatus(); // Changed from fetchLatestCommit()
         };
     </script>
 </body>
