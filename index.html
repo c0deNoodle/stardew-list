@@ -763,12 +763,12 @@
                 // 3. Compare and Format
                 if (liveSha === latestSha) {
                     // MATCH: Updated
-                    statusSpan.innerText = `Updated ✔ (Current SHA: ${liveSha})`;
+                    statusSpan.innerText = `Updated ✔ (Current commit: ${liveSha})`;
                     statusSpan.className = "status-updated";
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // MISMATCH: Pending
-                    statusSpan.innerText = `⚠️ Pending update (Current SHA: ${liveSha} - Pending SHA: ${latestSha})`;
+                    statusSpan.innerText = `⚠️ Pending update (Current commit: ${liveSha} - Pending commit: ${latestSha})`;
                     statusSpan.className = "status-pending";
                     
                     // Show the banner
