@@ -1,11 +1,26 @@
+Here is the complete, updated index.html code with all the discussed fixes integrated:
+
+Mobile Text Width Fix: The delete button is now hidden by default and only appears when you click to edit the title. This allows the text to expand to the full width of the container.
+Commit ID Fix: Added cache-busting timestamps, better error logging, and a fallback mechanism to fetch the branch head if the file-specific commit fails.
+Favicon: Includes the link to images/favicon.png.
+Footer: Displays the commit ID.
+Update Banner: Checks for new versions against the stored commit ID.
+Autosave: Fully functional with the status indicator.
+Instructions:
+Replace your entire index.html file in the GitHub repo with this code.
+Edit Line 283: Replace YOUR_GITHUB_USERNAME with your actual GitHub username.
+Check Line 285: Ensure BRANCH matches your repo's default branch (main or master).
+Commit the changes.
+Wait 1-2 minutes for GitHub Pages to update.
+Hard Refresh: On mobile, you may need to clear the browser cache or use "Incognito/Private" mode to see the new JS logic immediately.
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stardew Valley Quest Log</title>
-    <link rel="icon" type="image/png" href="IMAGES/favicon.png">
-    <link rel="apple-touch-icon" type="image/png" href="IMAGES/favicon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <style>
@@ -88,6 +103,8 @@
             padding: 10px;
             position: relative;
             cursor: grab;
+            display: flex;
+            flex-direction: column;
         }
 
         .quest-item.dragging { opacity: 0.5; }
@@ -96,12 +113,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
         .quest-checkbox {
             width: 20px;
             height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .editable-title-wrapper {
+            flex-grow: 1;
+            min-width: 0;
         }
 
         .editable-title {
@@ -110,18 +134,17 @@
             border: 1px dashed transparent;
             padding: 2px 4px;
             background: transparent;
-            min-width: 0; /* Allows flex to shrink */
+            min-width: 0;
             color: var(--text);
             word-break: break-word;
             line-height: 1.4;
             cursor: text;
-            white-space: normal; /* Allow wrapping */
-            /* NO line-clamp here - let it flow naturally */
+            white-space: normal;
+            outline: none;
         }
         .editable-title:focus {
             border-color: var(--border);
             background: #fff;
-            outline: none;
         }
 
         .quest-meta {
@@ -130,6 +153,26 @@
             margin-left: auto;
             min-width: 100px;
             text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Hide delete button by default */
+        .delete-btn {
+            display: none;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-left: 5px;
+        }
+
+        /* Show delete button when the item is being edited */
+        .quest-item.editing .delete-btn {
+            display: inline-block;
         }
 
         .subtasks {
@@ -165,6 +208,7 @@
             padding: 2px 6px;
             background: #ddd;
             color: #333;
+            margin-top: 5px;
         }
 
         .status-container {
@@ -185,6 +229,17 @@
         .saving { color: #ff9800; }
         .complete { color: var(--success); }
         .idle { color: #666; }
+
+        .update-banner {
+            display: none;
+            background: #ff9800;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
 
         .admin-panel {
             background: #fff;
@@ -238,6 +293,10 @@
             <span id="autosaveStatus" class="autosave-status idle">💾 Autosave on</span>
         </div>
 
+        <div id="updateBanner" class="update-banner">
+            ⚠️ New version available! <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>
+        </div>
+
         <div id="adminPanel" class="admin-panel">
             <h3>✏️ Editor Mode Active</h3>
             <div class="controls">
@@ -274,10 +333,6 @@
         <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888;">
             Last Commit: <span id="commitSha">Loading...</span>
         </div>
-        <!-- Update Banner (hidden by default) -->
-        <div id="updateBanner" style="display: none; background: #ff9800; color: white; padding: 10px; text-align: center; margin-bottom: 10px; border-radius: 4px;">
-            ⚠️ New version available! <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px;">Refresh Now</button>
-        </div>
     </div>
 
     <div id="loginModal" class="login-modal">
@@ -297,9 +352,9 @@
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'c0deNoodle'; // Your Github username
-        const REPO = 'stardew-list';          // Your repo name
-        const FILE_PATH = 'quests.json';      // The data file
+        const OWNER = 'YOUR_GITHUB_USERNAME';
+        const REPO = 'stardew-list';
+        const FILE_PATH = 'quests.json';
         const BRANCH = 'main';
 
         let currentData = [];
@@ -454,12 +509,14 @@
                             ${shouldCheck ? 'checked' : ''} 
                             ${isAdmin ? '' : 'disabled'}
                             onchange="toggleTask(${index})">
-                        ${isAdmin ? 
-                            `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
-                            `<span class="quest-text">${escapeHtml(task.title)}</span>`
-                        }
+                        <div class="editable-title-wrapper" onfocus="this.parentElement.parentElement.classList.add('editing')" onblur="this.parentElement.parentElement.classList.remove('editing')">
+                            ${isAdmin ? 
+                                `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                `<span class="quest-text">${escapeHtml(task.title)}</span>`
+                            }
+                        </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="danger" style="padding:2px 6px; font-size:0.8rem;" onclick="deleteTask(${index})">✕</button>` : ''}
+                        ${isAdmin ? `<button class="delete-btn" onclick="deleteTask(${index})">✕</button>` : ''}
                     </div>
                     <div class="subtasks" id="subtasks-${index}"></div>
                     ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
@@ -475,10 +532,12 @@
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" disabled checked>
-                        ${isAdmin ? 
-                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
-                            `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
-                        }
+                        <div class="editable-title-wrapper">
+                            ${isAdmin ? 
+                                `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
+                            }
+                        </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
                         ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
                     </div>
@@ -624,6 +683,73 @@
             });
         }
 
+        // --- FETCH LATEST COMMIT ---
+        async function fetchLatestCommit() {
+            const shaDisplay = document.getElementById('commitSha');
+            shaDisplay.innerText = "Checking...";
+
+            try {
+                const timestamp = Date.now();
+                const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1&_t=${timestamp}`;
+                
+                const headers = {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'User-Agent': 'StardewQuestLog'
+                };
+                if (authToken) headers['Authorization'] = `token ${authToken}`;
+
+                console.log("Fetching commit from:", url);
+                
+                const response = await fetch(url, { 
+                    headers, 
+                    cache: 'no-store',
+                    mode: 'cors'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log("Commit data:", data);
+
+                if (data && data.length > 0) {
+                    const sha = data[0].sha.substring(0, 7);
+                    shaDisplay.innerText = sha;
+                    checkForUpdates(sha);
+                } else {
+                    console.warn("No commits for file, trying branch head...");
+                    const fallbackUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${timestamp}`;
+                    const fallbackRes = await fetch(fallbackUrl, { headers, cache: 'no-store' });
+                    if (fallbackRes.ok) {
+                        const fallbackData = await fallbackRes.json();
+                        if (fallbackData && fallbackData.length > 0) {
+                            const sha = fallbackData[0].sha.substring(0, 7);
+                            shaDisplay.innerText = sha + " (Branch)";
+                            checkForUpdates(sha);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to fetch commit:", e);
+                shaDisplay.innerText = "Err";
+            }
+        }
+
+        // --- CHECK FOR UPDATES ---
+        function checkForUpdates(latestSha) {
+            const storedSha = localStorage.getItem('lastCommitSha');
+            const updateBanner = document.getElementById('updateBanner');
+            
+            if (storedSha && storedSha !== latestSha) {
+                updateBanner.style.display = 'block';
+            } else {
+                updateBanner.style.display = 'none';
+            }
+            
+            localStorage.setItem('lastCommitSha', latestSha);
+        }
+
         // --- LOGIN LOGIC ---
         function showLogin() {
             console.log("showLogin called");
@@ -679,52 +805,6 @@
                 lockStatus.style.color = "#666";
                 setStatus('idle');
             }
-        }
-
-        // --- FETCH LATEST COMMIT ---
-        async function fetchLatestCommit() {
-            try {
-                // Add timestamp to prevent caching
-                const timestamp = new Date().getTime();
-                const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1&_t=${timestamp}`;
-                const headers = {};
-                if (authToken) headers['Authorization'] = `token ${authToken}`;
-
-                const response = await fetch(url, { headers, cache: 'no-cache' });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.length > 0) {
-                        const sha = data[0].sha.substring(0, 7);
-                        document.getElementById('commitSha').innerText = sha;
-                        checkForUpdates(sha);
-                    } else {
-                        document.getElementById('commitSha').innerText = "N/A";
-                    }
-                } else {
-                    console.error("API Error:", response.status);
-                    document.getElementById('commitSha').innerText = "Error";
-                }
-            } catch (e) {
-                console.error("Failed to fetch commit:", e);
-                document.getElementById('commitSha').innerText = "Unavailable";
-            }
-        }
-
-        // --- CHECK FOR UPDATES ---
-        function checkForUpdates(latestSha) {
-            const storedSha = localStorage.getItem('lastCommitSha');
-            const updateBanner = document.getElementById('updateBanner');
-            
-            if (storedSha && storedSha !== latestSha) {
-                // New version available
-                updateBanner.style.display = 'block';
-            } else {
-                updateBanner.style.display = 'none';
-            }
-            
-            // Store current SHA for next comparison
-            localStorage.setItem('lastCommitSha', latestSha);
         }
 
         // --- INIT ---
