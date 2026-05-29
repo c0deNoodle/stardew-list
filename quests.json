@@ -1,18 +1,5 @@
 [
   {
-    "id": "1780088390831",
-    "title": "Kent",
-    "season": "Spring",
-    "day": "4",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780081269502",
     "title": "Add Super Cucumber to new pond",
     "season": "Winter",
