@@ -362,7 +362,7 @@
     "subtasks": [
       {
         "text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -375,7 +375,7 @@
     "subtasks": [
       {
         "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -388,7 +388,7 @@
     "subtasks": [
       {
         "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -401,7 +401,7 @@
     "subtasks": [
       {
         "text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)",
-        "done": "false"
+        "done": false
       }
     ]
   },
