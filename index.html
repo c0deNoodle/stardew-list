@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stardew Valley Quest Log</title>
-    <!-- Drag and Drop Library -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <style>
@@ -16,11 +15,12 @@
             --accent: #4caf50;
             --danger: #d32f2f;
             --secondary: #ff9800;
+            --success: #2e7d32;
         }
 
         body {
             font-family: 'Courier New', Courier, monospace;
-            background-color: --bg-color;
+            background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
             padding: 20px;
@@ -102,8 +102,22 @@
             cursor: pointer;
         }
 
-        .quest-text { flex-grow: 1; font-weight: bold; }
-        
+        /* Editable Title Styling */
+        .editable-title {
+            flex-grow: 1;
+            font-weight: bold;
+            border: 1px dashed transparent;
+            padding: 2px;
+            background: transparent;
+            width: 100%;
+            color: var(--text);
+        }
+        .editable-title:focus {
+            border-color: var(--border);
+            background: #fff;
+            outline: none;
+        }
+
         .quest-meta {
             font-size: 0.8rem;
             color: #666;
@@ -132,6 +146,12 @@
             border: none;
             background: transparent;
             border-bottom: 1px dotted #ccc;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .subtask-input:focus {
+            border-bottom: 1px solid var(--border);
+            outline: none;
         }
 
         .add-subtask-btn {
@@ -141,13 +161,25 @@
             color: #333;
         }
 
-        .status-msg {
+        /* Status Indicator Styles */
+        .status-container {
             text-align: center;
-            font-size: 0.9rem;
             margin-bottom: 10px;
+            min-height: 24px;
+        }
+        .status-msg {
             font-style: italic;
             color: #555;
+            display: none;
         }
+        .autosave-status {
+            font-weight: bold;
+            color: var(--secondary);
+            display: inline-block;
+        }
+        .saving { color: #ff9800; }
+        .complete { color: var(--success); }
+        .idle { color: #666; }
 
         .admin-panel {
             background: #fff;
@@ -189,9 +221,13 @@
 
     <div class="container">
         <h1>🌾 Quest Log</h1>
-        <div id="status" class="status-msg">Loading...</div>
+        
+        <div class="status-container">
+            <span id="statusMsg" class="status-msg">Loading...</span>
+            <span id="autosaveStatus" class="autosave-status idle">💾 Autosave on</span>
+        </div>
 
-        <!-- Admin Controls (Visible only when logged in) -->
+        <!-- Admin Controls -->
         <div id="adminPanel" class="admin-panel">
             <h3>✏️ Editor Mode Active</h3>
             <div class="controls">
@@ -205,7 +241,6 @@
                 </select>
                 <input type="number" id="dayInput" min="1" max="28" placeholder="Day" style="width: 60px;">
                 <button onclick="addTask()">Add Quest</button>
-                <button class="secondary" onclick="saveData()">💾 Save Changes</button>
             </div>
         </div>
 
@@ -241,19 +276,75 @@
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'YOUR_GITHUB_USERNAME'; // REPLACE THIS
+        const OWNER = 'c0deNoodle'; // Your Github username
         const REPO = 'stardew-list';          // Your repo name
         const FILE_PATH = 'quests.json';      // The data file
+        const BRANCH = 'main'; // CHANGE TO 'master' IF NEEDED
 
         let currentData = [];
         let authToken = localStorage.getItem('gh_token');
         let isAdmin = !!authToken;
         let sortableActive = null;
+        let saveTimeout = null;
+
+        // --- STATUS INDICATOR LOGIC ---
+        function setStatus(state, message = "") {
+            const statusMsg = document.getElementById('statusMsg');
+            const autosaveStatus = document.getElementById('autosaveStatus');
+
+            if (state === 'idle') {
+                statusMsg.style.display = 'none';
+                autosaveStatus.style.display = 'inline-block';
+                autosaveStatus.innerText = "💾 Autosave on";
+                autosaveStatus.className = "autosave-status idle";
+            } else if (state === 'saving') {
+                statusMsg.style.display = 'none';
+                autosaveStatus.style.display = 'inline-block';
+                autosaveStatus.innerText = "💾 Saving to GitHub...";
+                autosaveStatus.className = "autosave-status saving";
+            } else if (state === 'complete') {
+                statusMsg.style.display = 'none';
+                autosaveStatus.style.display = 'inline-block';
+                autosaveStatus.innerText = "💾 Autosave complete";
+                autosaveStatus.className = "autosave-status complete";
+                // Fade out after 2 seconds
+                setTimeout(() => {
+                    if(autosaveStatus.innerText.includes("complete")) {
+                        setStatus('idle');
+                    }
+                }, 2000);
+            } else if (state === 'error') {
+                statusMsg.style.display = 'inline-block';
+                statusMsg.innerText = message;
+                statusMsg.style.color = 'var(--danger)';
+                autosaveStatus.style.display = 'none';
+            } else if (state === 'loading') {
+                statusMsg.style.display = 'inline-block';
+                statusMsg.innerText = message;
+                statusMsg.style.color = '#555';
+                autosaveStatus.style.display = 'none';
+            }
+        }
+
+        // --- AUTOSAVE LOGIC ---
+        function triggerAutosave() {
+            if (!isAdmin) return;
+            
+            // Clear existing timeout
+            if (saveTimeout) clearTimeout(saveTimeout);
+            
+            // Set status to saving
+            setStatus('saving');
+
+            // Wait 1 second before saving (debounce)
+            saveTimeout = setTimeout(async () => {
+                await saveData();
+            }, 1000);
+        }
 
         // --- DATA FETCHING ---
         async function fetchData() {
-            const statusEl = document.getElementById('status');
-            statusEl.innerText = "Loading...";
+            setStatus('loading', "Loading...");
 
             try {
                 const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
@@ -266,63 +357,60 @@
                     if (response.status === 404) {
                         currentData = [];
                         render();
-                        statusEl.innerText = "No quests found. Add some!";
+                        setStatus('idle');
                         return;
                     }
                     throw new Error(`HTTP ${response.status}`);
                 }
 
                 const json = await response.json();
-                // Decode base64 content
                 const content = atob(json.content);
                 currentData = JSON.parse(content);
                 
                 render();
-                statusEl.innerText = `Loaded ${currentData.length} quests.`;
+                setStatus('idle');
             } catch (e) {
                 console.error(e);
-                statusEl.innerText = "Error loading data. Check network or token.";
+                setStatus('error', "Error loading data.");
             }
         }
 
         // --- SAVING DATA ---
         async function saveData() {
-            if (!authToken) return alert("You must login first!");
-
-            const statusEl = document.getElementById('status');
-            statusEl.innerText = "Saving...";
+            if (!authToken) return;
 
             try {
-                // 1. Get current file info (SHA)
                 const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
                 const headers = { 'Authorization': `token ${authToken}` };
                 const getRes = await fetch(getUrl, { headers });
-                const fileInfo = await getRes.json();
+                
+                if (!getRes.ok) {
+                    // If file doesn't exist, create it
+                    const newContent = btoa(JSON.stringify(currentData, null, 2));
+                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const putBody = {
+                        message: "Create quest log",
+                        content: newContent,
+                        branch: BRANCH
+                    };
+                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                } else {
+                    const fileInfo = await getRes.json();
+                    const newContent = btoa(JSON.stringify(currentData, null, 2));
+                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const putBody = {
+                        message: "Update quest log",
+                        content: newContent,
+                        sha: fileInfo.sha,
+                        branch: BRANCH
+                    };
+                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                }
 
-                // 2. Prepare new content
-                const newContent = btoa(JSON.stringify(currentData, null, 2));
-
-                // 3. Update file
-                const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                const putBody = {
-                    message: "Update quest log",
-                    content: newContent,
-                    sha: fileInfo.sha,
-                    branch: "main" // Ensure this matches your default branch (often 'main' or 'master')
-                };
-
-                const putRes = await fetch(putUrl, {
-                    method: 'PUT',
-                    headers: headers,
-                    body: JSON.stringify(putBody)
-                });
-
-                if (!putRes.ok) throw new Error("Save failed");
-
-                statusEl.innerText = "Saved successfully!";
+                setStatus('complete');
             } catch (e) {
                 console.error(e);
-                statusEl.innerText = "Save failed: " + e.message;
+                setStatus('error', "Save failed: " + e.message);
             }
         }
 
@@ -352,7 +440,10 @@
                             ${shouldCheck ? 'checked' : ''} 
                             ${isAdmin ? '' : 'disabled'}
                             onchange="toggleTask(${index})">
-                        <span class="quest-text">${escapeHtml(task.title)}</span>
+                        ${isAdmin ? 
+                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
+                            `<span class="quest-text">${escapeHtml(task.title)}</span>`
+                        }
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
                         ${isAdmin ? `<button class="danger" style="padding:2px 6px; font-size:0.8rem;" onclick="deleteTask(${index})">✕</button>` : ''}
                     </div>
@@ -371,7 +462,10 @@
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" disabled checked>
-                        <span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>
+                        ${isAdmin ? 
+                            `<input type="text" class="editable-title" value="${escapeHtml(task.title)}" onchange="updateTitle(${index}, this.value)">` : 
+                            `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
+                        }
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
                         ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
                     </div>
@@ -391,7 +485,10 @@
                 div.className = 'subtask-item';
                 div.innerHTML = `
                     <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtask(${parentIndex}, ${stIndex})">
-                    <span class="subtask-input">${escapeHtml(st.text)}</span>
+                    ${isAdmin ? 
+                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtext(${parentIndex}, ${stIndex}, this.value)">` : 
+                        `<span class="subtask-input">${escapeHtml(st.text)}</span>`
+                    }
                     ${isAdmin ? `<button class="danger" style="padding:2px 5px; font-size:0.8rem;" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
                 `;
                 container.appendChild(div);
@@ -423,8 +520,7 @@
             
             document.getElementById('newTaskInput').value = '';
             render();
-            // Auto-save optional, but let's wait for explicit save button to avoid rate limits
-            document.getElementById('status').innerText = "Added (Click Save to commit)";
+            triggerAutosave();
         }
 
         function toggleTask(index) {
@@ -438,6 +534,7 @@
             }
             task.completed = !task.completed;
             render();
+            triggerAutosave();
         }
 
         function restoreTask(completedIndex) {
@@ -455,6 +552,7 @@
             if(targetTask) {
                 targetTask.completed = false;
                 render();
+                triggerAutosave();
             }
         }
 
@@ -462,89 +560,12 @@
             if(confirm("Delete this quest?")) {
                 currentData.splice(index, 1);
                 render();
+                triggerAutosave();
             }
         }
 
         function addSubtask(parentIndex) {
-            currentData[parentIndex].subtasks.push({ text: "New subtask", done: false });
+            // Add empty subtask
+            currentData[parentIndex].subtasks.push({ text: "", done: false });
             render();
-        }
-
-        function toggleSubtask(parentIndex, subIndex) {
-            currentData[parentIndex].subtasks[subIndex].done = !currentData[parentIndex].subtasks[subIndex].done;
-            render();
-        }
-
-        function updateSubtext(parentIndex, subIndex, val) {
-            currentData[parentIndex].subtasks[subIndex].text = val;
-            render();
-        }
-
-        function deleteSubtask(parentIndex, subIndex) {
-            currentData[parentIndex].subtasks.splice(subIndex, 1);
-            render();
-        }
-
-        // --- DRAG AND DROP ---
-        function initSortable() {
-            if(sortableActive) sortableActive.destroy();
-            sortableActive = Sortable.create(document.getElementById('activeList'), {
-                animation: 150,
-                ghostClass: 'dragging',
-                onEnd: function(evt) {
-                    const item = currentData.splice(evt.oldIndex, 1)[0];
-                    currentData.splice(evt.newIndex, 0, item);
-                    render();
-                }
-            });
-        }
-
-        // --- LOGIN LOGIC ---
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-
-        function closeLogin() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        function saveToken() {
-            const token = document.getElementById('tokenInput').value.trim();
-            if (token.startsWith('github_pat_')) {
-                localStorage.setItem('gh_token', token);
-                authToken = token;
-                isAdmin = true;
-                closeLogin();
-                updateUIState();
-                fetchData();
-            } else {
-                alert("Invalid token format. Must start with 'github_pat_'");
-            }
-        }
-
-        function updateUIState() {
-            const adminPanel = document.getElementById('adminPanel');
-            const loginBtn = document.getElementById('loginBtn');
-            const lockStatus = document.getElementById('lockStatus');
-
-            if (isAdmin) {
-                adminPanel.classList.add('active');
-                loginBtn.style.display = 'none';
-                lockStatus.innerText = "Editing Enabled";
-                lockStatus.style.color = "green";
-            } else {
-                adminPanel.classList.remove('active');
-                loginBtn.style.display = 'inline-block';
-                lockStatus.innerText = "View Only";
-                lockStatus.style.color = "#666";
-            }
-        }
-
-        // --- INIT ---
-        window.onload = function() {
-            updateUIState();
-            fetchData();
-        };
-    </script>
-</body>
-</html>
+            // Focus the new input
