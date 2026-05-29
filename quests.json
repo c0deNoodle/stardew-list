@@ -271,7 +271,7 @@
     "subtasks": [
       {
         "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -284,7 +284,7 @@
     "subtasks": [
       {
         "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
-        "done": "false"
+        "done": false
       }
     ]
   },
