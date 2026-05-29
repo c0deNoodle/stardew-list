@@ -141,7 +141,6 @@
             white-space: nowrap;
         }
 
-        /* Delete button removed for main tasks, kept for subtasks */
         .subtask-delete-btn {
             padding: 2px 5px;
             font-size: 0.8rem;
@@ -484,12 +483,11 @@
             const activeTasks = currentData.filter(t => !t.completed);
             const completedTasks = currentData.filter(t => t.completed);
 
-            activeTasks.forEach((task, index) => {
+            activeTasks.forEach((task) => {
                 const li = document.createElement('li');
                 li.className = 'quest-item';
-                li.dataset.index = index; 
                 
-                // Logic: Main task completion is independent of subtasks
+                // Logic Change: Main task completion is independent of subtasks
                 const shouldCheck = task.completed;
 
                 li.innerHTML = `
@@ -497,27 +495,27 @@
                         <input type="checkbox" class="quest-checkbox" 
                             ${shouldCheck ? 'checked' : ''} 
                             ${isAdmin ? '' : 'disabled'}
-                            onchange="toggleTask(${index})">
+                            onchange="toggleTaskById('${task.id}')">
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
                                 `<div class="editable-title" 
                                     contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
-                                    onblur="handleTitleBlur(this, ${index})"
+                                    onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text">${escapeHtml(task.title)}</span>`
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
                     </div>
-                    <div class="subtasks" id="subtasks-${index}"></div>
-                    ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
+                    <div class="subtasks" id="subtasks-${task.id}"></div>
+                    ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtaskById('${task.id}')">+ Subtask</button>` : ''}
                 `;
                 activeList.appendChild(li);
-                renderSubtasks(index, task.subtasks);
+                renderSubtasksById(task.id, task.subtasks);
             });
 
-            completedTasks.forEach((task, index) => {
+            completedTasks.forEach((task) => {
                 const li = document.createElement('li');
                 li.className = 'quest-item';
                 li.style.opacity = '0.7';
@@ -529,13 +527,13 @@
                                 `<div class="editable-title" 
                                     contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
-                                    onblur="handleTitleBlur(this, ${index})"
+                                    onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTask(${index})">Restore</button>` : ''}
+                        ${isAdmin ? `<button class="secondary" style="padding:2px 6px; font-size:0.8rem;" onclick="restoreTaskById('${task.id}')">Restore</button>` : ''}
                     </div>
                 `;
                 completedList.appendChild(li);
@@ -544,20 +542,20 @@
             if (isAdmin) initSortable();
         }
 
-        function renderSubtasks(parentIndex, subtasks) {
-            const container = document.getElementById(`subtasks-${parentIndex}`);
+        function renderSubtasksById(taskId, subtasks) {
+            const container = document.getElementById(`subtasks-${taskId}`);
             if(!container) return;
             
             subtasks.forEach((st, stIndex) => {
                 const div = document.createElement('div');
                 div.className = 'subtask-item';
                 div.innerHTML = `
-                    <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtask(${parentIndex}, ${stIndex})">
+                    <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtaskById('${taskId}', ${stIndex})">
                     ${isAdmin ? 
-                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtext(${parentIndex}, ${stIndex}, this.value)">` : 
+                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtextById('${taskId}', ${stIndex}, this.value)">` : 
                         `<span class="subtask-input">${escapeHtml(st.text)}</span>`
                     }
-                    ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
+                    ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtaskById('${taskId}', ${stIndex})">x</button>` : ''}
                 `;
                 container.appendChild(div);
             });
@@ -570,23 +568,18 @@
         }
 
         // --- NEW: Handle Title Blur (Deletion Logic) ---
-        function handleTitleBlur(element, index) {
+        function handleTitleBlur(element, taskId) {
             const newText = element.innerText.trim();
             const originalText = element.dataset.originalText || "";
 
             if (newText === "") {
                 // Empty text detected
                 if (confirm("The task text is empty. Delete this quest?")) {
-                    // Delete the task
-                    const activeTasks = currentData.filter(t => !t.completed);
-                    const taskToDelete = activeTasks[index];
-                    if (taskToDelete) {
-                        const actualIndex = currentData.indexOf(taskToDelete);
-                        if (actualIndex !== -1) {
-                            currentData.splice(actualIndex, 1);
-                            render();
-                            triggerAutosave();
-                        }
+                    const index = currentData.findIndex(t => t.id === taskId);
+                    if (index !== -1) {
+                        currentData.splice(index, 1);
+                        render();
+                        triggerAutosave();
                     }
                 } else {
                     // Cancel deletion: Restore original text
@@ -595,13 +588,16 @@
             } else {
                 // Text changed: Save normally
                 if (newText !== originalText) {
-                    currentData[index].title = newText;
-                    triggerAutosave();
+                    const index = currentData.findIndex(t => t.id === taskId);
+                    if (index !== -1) {
+                        currentData[index].title = newText;
+                        triggerAutosave();
+                    }
                 }
             }
         }
 
-        // --- ACTIONS ---
+        // --- ACTIONS (ID Based) ---
         function addTask() {
             const title = document.getElementById('newTaskInput').value;
             const season = document.getElementById('seasonSelect').value;
@@ -623,35 +619,27 @@
             triggerAutosave();
         }
 
-        function toggleTask(index) {
-            const task = currentData[index];
-            // Logic Change: No longer checks subtasks before toggling
-            task.completed = !task.completed;
-            render();
-            triggerAutosave();
+        // NEW: Toggle by ID
+        function toggleTaskById(taskId) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                render();
+                triggerAutosave();
+            }
         }
 
-        function restoreTask(completedIndex) {
-            let count = 0;
-            let targetTask = null;
-            for(let t of currentData) {
-                if(t.completed) {
-                    if(count === completedIndex) {
-                        targetTask = t;
-                        break;
-                    }
-                    count++;
-                }
-            }
-            if(targetTask) {
-                targetTask.completed = false;
+        // NEW: Restore by ID
+        function restoreTaskById(taskId) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task) {
+                task.completed = false;
                 render();
                 triggerAutosave();
             }
         }
 
         function deleteTask(taskId) {
-            // Kept for backward compatibility if needed, but not used in new UI
             if(confirm("Delete this quest?")) {
                 const index = currentData.findIndex(t => t.id === taskId);
                 if (index !== -1) {
@@ -662,37 +650,47 @@
             }
         }
 
-        function addSubtask(parentIndex) {
-            currentData[parentIndex].subtasks.push({ text: "", done: false });
-            render();
-            setTimeout(() => {
-                const inputs = document.querySelectorAll(`#subtasks-${parentIndex} input[type="text"]`);
-                if(inputs.length > 0) inputs[inputs.length - 1].focus();
-            }, 50);
-            triggerAutosave();
+        // NEW: Add Subtask by ID
+        function addSubtaskById(taskId) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task) {
+                task.subtasks.push({ text: "", done: false });
+                render();
+                setTimeout(() => {
+                    const inputs = document.querySelectorAll(`#subtasks-${taskId} input[type="text"]`);
+                    if(inputs.length > 0) inputs[inputs.length - 1].focus();
+                }, 50);
+                triggerAutosave();
+            }
         }
 
-        function toggleSubtask(parentIndex, subIndex) {
-            currentData[parentIndex].subtasks[subIndex].done = !currentData[parentIndex].subtasks[subIndex].done;
-            render();
-            triggerAutosave();
+        // NEW: Toggle Subtask by ID
+        function toggleSubtaskById(taskId, subIndex) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task && task.subtasks[subIndex]) {
+                task.subtasks[subIndex].done = !task.subtasks[subIndex].done;
+                render();
+                triggerAutosave();
+            }
         }
 
-        function updateSubtext(parentIndex, subIndex, val) {
-            currentData[parentIndex].subtasks[subIndex].text = val;
-            triggerAutosave();
+        // NEW: Update Subtext by ID
+        function updateSubtextById(taskId, subIndex, val) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task && task.subtasks[subIndex]) {
+                task.subtasks[subIndex].text = val;
+                triggerAutosave();
+            }
         }
 
-        function deleteSubtask(parentIndex, subIndex) {
-            currentData[parentIndex].subtasks.splice(subIndex, 1);
-            render();
-            triggerAutosave();
-        }
-
-        function updateTitle(index, val) {
-            // Legacy function, now handled by handleTitleBlur
-            currentData[index].title = val;
-            triggerAutosave();
+        // NEW: Delete Subtask by ID
+        function deleteSubtaskById(taskId, subIndex) {
+            const task = currentData.find(t => t.id === taskId);
+            if (task) {
+                task.subtasks.splice(subIndex, 1);
+                render();
+                triggerAutosave();
+            }
         }
 
         // --- DRAG AND DROP ---
@@ -702,8 +700,26 @@
                 animation: 150,
                 ghostClass: 'dragging',
                 onEnd: function(evt) {
-                    const item = currentData.splice(evt.oldIndex, 1)[0];
-                    currentData.splice(evt.newIndex, 0, item);
+                    // Re-sort the main array based on new visual order
+                    const newOrderIds = Array.from(document.getElementById('activeList').children).map(li => {
+                        // Extract ID from the checkbox onchange handler string
+                        const handler = li.querySelector('input[type="checkbox"]').getAttribute('onchange');
+                        const match = handler.match(/'([^']+)'/);
+                        return match ? match[1] : null;
+                    }).filter(id => id);
+
+                    // Rebuild currentData active tasks based on new order
+                    const activeTasks = currentData.filter(t => !t.completed);
+                    const newActiveTasks = [];
+                    newOrderIds.forEach(id => {
+                        const task = activeTasks.find(t => t.id === id);
+                        if (task) newActiveTasks.push(task);
+                    });
+
+                    // Reconstruct currentData: [new active tasks] + [completed tasks]
+                    const completedTasks = currentData.filter(t => t.completed);
+                    currentData = [...newActiveTasks, ...completedTasks];
+                    
                     render();
                     triggerAutosave();
                 }
@@ -775,11 +791,6 @@
                 statusSpan.innerText = "Error checking status";
                 statusSpan.className = "";
             }
-        }
-
-        // --- CHECK FOR UPDATES (Legacy, kept for compatibility) ---
-        function checkForUpdates(latestSha) {
-            // Not used in new logic, but kept to prevent errors if called elsewhere
         }
 
         // --- LOGIN LOGIC ---
