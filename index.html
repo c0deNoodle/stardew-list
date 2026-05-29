@@ -1,18 +1,3 @@
-Here is the complete, updated index.html code with all the discussed fixes integrated:
-
-Mobile Text Width Fix: The delete button is now hidden by default and only appears when you click to edit the title. This allows the text to expand to the full width of the container.
-Commit ID Fix: Added cache-busting timestamps, better error logging, and a fallback mechanism to fetch the branch head if the file-specific commit fails.
-Favicon: Includes the link to images/favicon.png.
-Footer: Displays the commit ID.
-Update Banner: Checks for new versions against the stored commit ID.
-Autosave: Fully functional with the status indicator.
-Instructions:
-Replace your entire index.html file in the GitHub repo with this code.
-Edit Line 283: Replace YOUR_GITHUB_USERNAME with your actual GitHub username.
-Check Line 285: Ensure BRANCH matches your repo's default branch (main or master).
-Commit the changes.
-Wait 1-2 minutes for GitHub Pages to update.
-Hard Refresh: On mobile, you may need to clear the browser cache or use "Incognito/Private" mode to see the new JS logic immediately.
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -352,9 +337,9 @@ Hard Refresh: On mobile, you may need to clear the browser cache or use "Incogni
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'YOUR_GITHUB_USERNAME';
-        const REPO = 'stardew-list';
-        const FILE_PATH = 'quests.json';
+        const OWNER = 'c0deNoodle';           // Your Github username
+        const REPO = 'stardew-list';          // Your repo name
+        const FILE_PATH = 'quests.json';      // The data file
         const BRANCH = 'main';
 
         let currentData = [];
