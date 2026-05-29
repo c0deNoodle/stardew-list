@@ -245,7 +245,7 @@
     "subtasks": [
       {
         "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
-        "done": "false"
+        "done": false
       }
     ]
   },
@@ -258,7 +258,7 @@
     "subtasks": [
       {
         "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
-        "done": "false"
+        "done": false
       }
     ]
   },
