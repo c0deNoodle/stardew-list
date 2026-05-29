@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
+    
     <style>
         :root {
             --bg-color: #f4e4bc;
@@ -141,9 +141,9 @@
             white-space: nowrap;
         }
 
-        .delete-btn {
-            display: none;
-            padding: 2px 6px;
+        /* Delete button removed for main tasks, kept for subtasks */
+        .subtask-delete-btn {
+            padding: 2px 5px;
             font-size: 0.8rem;
             background: var(--danger);
             color: white;
@@ -151,11 +151,6 @@
             border-radius: 4px;
             cursor: pointer;
             flex-shrink: 0;
-            margin-left: 5px;
-        }
-
-        .quest-item.editing .delete-btn {
-            display: inline-block;
         }
 
         .subtasks {
@@ -266,7 +261,7 @@
             padding: 8px;
         }
 
-        /* NEW: Status Indicator Styles */
+        /* Status Indicator Styles */
         .status-updated {
             color: var(--success);
             font-weight: bold;
@@ -288,7 +283,7 @@
         </div>
 
         <div id="updateBanner" class="update-banner">
-            ⚠️ New version available! <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>
+            <!-- Content injected by JS -->
         </div>
 
         <div id="adminPanel" class="admin-panel">
@@ -346,8 +341,8 @@
 
     <script>
         // --- CONFIGURATION ---
-        const OWNER = 'c0deNoodle';           // Your Github username
-        const REPO = 'stardew-list';          // Your repo name
+        const OWNER = 'c0deNoodle';           // Github username
+        const REPO = 'stardew-list';          // Repo name
         const FILE_PATH = 'quests.json';      // The data file
         const BRANCH = 'main';
 
@@ -497,7 +492,7 @@
                 const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
                 const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
 
-                // FIXED: Moved onfocus/onblur to the inner div
+                // NEW LOGIC: onfocus stores original text, onblur checks for empty
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" class="quest-checkbox" 
@@ -506,16 +501,15 @@
                             onchange="toggleTask(${index})">
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" contenteditable="true" 
-                                    onfocus="this.parentElement.parentElement.parentElement.classList.add('editing')" 
-                                    onblur="this.parentElement.parentElement.parentElement.classList.remove('editing')"
-                                    onblur="updateTitle(${index}, this.innerText)" 
+                                `<div class="editable-title" 
+                                    contenteditable="true" 
+                                    onfocus="this.dataset.originalText = this.innerText" 
+                                    onblur="handleTitleBlur(this, ${index})"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text">${escapeHtml(task.title)}</span>`
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
-                        ${isAdmin ? `<button class="delete-btn" onclick="deleteTask('${task.id}')">✕</button>` : ''}
                     </div>
                     <div class="subtasks" id="subtasks-${index}"></div>
                     ${isAdmin ? `<button class="add-subtask-btn" onclick="addSubtask(${index})">+ Subtask</button>` : ''}
@@ -528,16 +522,15 @@
                 const li = document.createElement('li');
                 li.className = 'quest-item';
                 li.style.opacity = '0.7';
-                // FIXED: Same focus logic for completed tasks
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" disabled checked>
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" contenteditable="true" 
-                                    onfocus="this.parentElement.parentElement.parentElement.classList.add('editing')" 
-                                    onblur="this.parentElement.parentElement.parentElement.classList.remove('editing')"
-                                    onblur="updateTitle(${index}, this.innerText)" 
+                                `<div class="editable-title" 
+                                    contenteditable="true" 
+                                    onfocus="this.dataset.originalText = this.innerText" 
+                                    onblur="handleTitleBlur(this, ${index})"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
                             }
@@ -565,7 +558,7 @@
                         `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtext(${parentIndex}, ${stIndex}, this.value)">` : 
                         `<span class="subtask-input">${escapeHtml(st.text)}</span>`
                     }
-                    ${isAdmin ? `<button class="danger" style="padding:2px 5px; font-size:0.8rem;" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
+                    ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtask(${parentIndex}, ${stIndex})">x</button>` : ''}
                 `;
                 container.appendChild(div);
             });
@@ -575,6 +568,38 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // --- NEW: Handle Title Blur (Deletion Logic) ---
+        function handleTitleBlur(element, index) {
+            const newText = element.innerText.trim();
+            const originalText = element.dataset.originalText || "";
+
+            if (newText === "") {
+                // Empty text detected
+                if (confirm("The task text is empty. Delete this quest?")) {
+                    // Delete the task
+                    const activeTasks = currentData.filter(t => !t.completed);
+                    const taskToDelete = activeTasks[index];
+                    if (taskToDelete) {
+                        const actualIndex = currentData.indexOf(taskToDelete);
+                        if (actualIndex !== -1) {
+                            currentData.splice(actualIndex, 1);
+                            render();
+                            triggerAutosave();
+                        }
+                    }
+                } else {
+                    // Cancel deletion: Restore original text
+                    element.innerText = originalText;
+                }
+            } else {
+                // Text changed: Save normally
+                if (newText !== originalText) {
+                    currentData[index].title = newText;
+                    triggerAutosave();
+                }
+            }
         }
 
         // --- ACTIONS ---
@@ -633,6 +658,7 @@
         }
 
         function deleteTask(taskId) {
+            // Kept for backward compatibility if needed, but not used in new UI
             if(confirm("Delete this quest?")) {
                 const index = currentData.findIndex(t => t.id === taskId);
                 if (index !== -1) {
@@ -671,6 +697,7 @@
         }
 
         function updateTitle(index, val) {
+            // Legacy function, now handled by handleTitleBlur
             currentData[index].title = val;
             triggerAutosave();
         }
@@ -694,7 +721,7 @@
         async function fetchPageStatus() {
             const statusSpan = document.getElementById('pageStatus');
             statusSpan.innerText = "Checking...";
-            statusSpan.className = ""; // Reset classes
+            statusSpan.className = "";
 
             try {
                 // 1. Fetch the LATEST commit on the main branch (Repository HEAD)
@@ -711,12 +738,10 @@
                 const latestSha = latestData[0].sha.substring(0, 7);
 
                 // 2. Fetch the GITHUB PAGES DEPLOYMENTS
-                // This returns a list of deployments. We need the one with state: "success"
                 const deploymentsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/pages/deployments?per_page=1&_t=${Date.now()}`;
                 const deployRes = await fetch(deploymentsUrl, { headers, cache: 'no-store' });
                 
                 let liveSha = null;
-                let isPending = false;
 
                 if (deployRes.ok) {
                     const deployments = await deployRes.json();
@@ -726,12 +751,11 @@
                     if (successDeploy) {
                         liveSha = successDeploy.sha.substring(0, 7);
                     } else {
-                        // If no successful deployment found yet (brand new repo?), fallback to latest
+                        // No successful deployment yet
                         liveSha = latestSha; 
-                        isPending = true;
                     }
                 } else {
-                    // If API fails (e.g., no token scope), fallback to latest
+                    // API failure (e.g., token scope issue)
                     console.warn("Could not fetch deployment status. Assuming latest is live.");
                     liveSha = latestSha;
                 }
@@ -739,12 +763,12 @@
                 // 3. Compare and Format
                 if (liveSha === latestSha) {
                     // MATCH: Updated
-                    statusSpan.innerText = `Updated ✔ (Commit: ${liveSha})`;
+                    statusSpan.innerText = `Updated ✔ (Current SHA: ${liveSha})`;
                     statusSpan.className = "status-updated";
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // MISMATCH: Pending
-                    statusSpan.innerText = `⚠️ Pending update (Commit: ${liveSha} - Pending Commit: ${latestSha})`;
+                    statusSpan.innerText = `⚠️ Pending update (Current SHA: ${liveSha} - Pending SHA: ${latestSha})`;
                     statusSpan.className = "status-pending";
                     
                     // Show the banner
@@ -760,18 +784,9 @@
             }
         }
 
-        // --- CHECK FOR UPDATES ---
+        // --- CHECK FOR UPDATES (Legacy, kept for compatibility) ---
         function checkForUpdates(latestSha) {
-            const storedSha = localStorage.getItem('lastCommitSha');
-            const updateBanner = document.getElementById('updateBanner');
-            
-            if (storedSha && storedSha !== latestSha) {
-                updateBanner.style.display = 'block';
-            } else {
-                updateBanner.style.display = 'none';
-            }
-            
-            localStorage.setItem('lastCommitSha', latestSha);
+            // Not used in new logic, but kept to prevent errors if called elsewhere
         }
 
         // --- LOGIN LOGIC ---
@@ -835,7 +850,7 @@
         window.onload = function() {
             updateUIState();
             fetchData();
-            fetchPageStatus(); // Changed from fetchLatestCommit()
+            fetchPageStatus();
         };
     </script>
 </body>
