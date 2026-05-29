@@ -327,15 +327,20 @@
     <div id="loginModal" class="login-modal">
         <div class="login-box">
             <h3>Login to Edit</h3>
-            <p>Paste your GitHub Personal Access Token below:</p>
-            <textarea id="tokenInput" placeholder="github_pat_..."></textarea>
-            <div style="display:flex; gap:10px; justify-content:center; margin-top: 10px;">
-                <button onclick="saveToken()">Login</button>
+            <p><strong>Step 1:</strong> Paste your GitHub Personal Access Token:</p>
+            <textarea id="tokenInput" placeholder="github_pat_..." style="width: 100%; height: 60px; margin: 10px 0; font-family: monospace; border: 2px solid var(--border); padding: 8px;"></textarea>
+            
+            <p><strong>Step 2:</strong> Create a Master Password to encrypt the token:</p>
+            <input type="password" id="masterPasswordInput" placeholder="Enter a strong password" style="width: 100%; margin-bottom: 10px;">
+            
+            <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+                This password is required every time you refresh the page to unlock your token.
+            </p>
+
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button onclick="saveEncryptedToken()">Login & Encrypt</button>
                 <button class="danger" onclick="closeLogin()">Cancel</button>
             </div>
-            <p style="font-size: 0.8rem; color: #666; margin-top: 15px;">
-                Token starts with: <code>github_pat_</code>
-            </p>
         </div>
     </div>
 
@@ -789,6 +794,52 @@
             // Not used in new logic, but kept to prevent errors if called elsewhere
         }
 
+        // --- ENCRYPTION HELPERS ---
+        async function encryptData(data, password) {
+            const enc = new TextEncoder();
+            const keyMaterial = await window.crypto.subtle.importKey(
+                "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+            );
+            const key = await window.crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: enc.encode("stardew_salt_v1"), iterations: 100000, hash: "SHA-256" },
+                keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt"]
+            );
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await window.crypto.subtle.encrypt(
+                { name: "AES-GCM", iv: iv }, key, enc.encode(data)
+            );
+            // Combine IV + Encrypted Data for storage
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv);
+            combined.set(new Uint8Array(encrypted), iv.length);
+            return btoa(String.fromCharCode(...combined));
+        }
+
+        async function decryptData(encryptedBase64, password) {
+            try {
+                const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+                const iv = combined.slice(0, 12);
+                const encrypted = combined.slice(12);
+                
+                const enc = new TextEncoder();
+                const keyMaterial = await window.crypto.subtle.importKey(
+                    "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+                );
+                const key = await window.crypto.subtle.deriveKey(
+                    { name: "PBKDF2", salt: enc.encode("stardew_salt_v1"), iterations: 100000, hash: "SHA-256" },
+                    keyMaterial, { name: "AES-GCM", length: 256 }, false, ["decrypt"]
+                );
+                
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv }, key, encrypted
+                );
+                return new TextDecoder().decode(decrypted);
+            } catch (e) {
+                console.error("Decryption failed:", e);
+                return null;
+            }
+        }
+
         // --- LOGIN LOGIC ---
         function showLogin() {
             console.log("showLogin called");
@@ -810,19 +861,59 @@
             }
         }
 
-        function saveToken() {
+        // --- UPDATED: Save Encrypted Token ---
+        async function saveEncryptedToken() {
             const token = document.getElementById('tokenInput').value.trim();
-            console.log("Token submitted:", token.substring(0, 15) + "...");
+            const masterPass = document.getElementById('masterPasswordInput').value.trim();
             
-            if (token && token.includes('pat_')) {
-                localStorage.setItem('gh_token', token);
-                authToken = token;
-                isAdmin = true;
+            if (!token || !token.includes('pat_')) {
+                alert("Invalid token format.");
+                return;
+            }
+            if (!masterPass || masterPass.length < 6) {
+                alert("Master Password must be at least 6 characters.");
+                return;
+            }
+
+            try {
+                // Encrypt the token
+                const encryptedToken = await encryptData(token, masterPass);
+                
+                // Save encrypted token and a flag that we have a password
+                localStorage.setItem('gh_token_enc', encryptedToken);
+                localStorage.setItem('gh_has_master_pass', 'true');
+                
+                // Clear the plaintext inputs
+                document.getElementById('tokenInput').value = '';
+                document.getElementById('masterPasswordInput').value = '';
+                
                 closeLogin();
+                alert("Token encrypted and saved! You will need this Master Password to unlock it next time.");
+                
+                // Immediately try to unlock (simulating a login)
+                await unlockSession(masterPass);
+                
+            } catch (e) {
+                console.error("Encryption failed:", e);
+                alert("Encryption failed. Please try again.");
+            }
+        }
+
+        // --- NEW: Unlock Session on Load ---
+        async function unlockSession(masterPass) {
+            const encryptedToken = localStorage.getItem('gh_token_enc');
+            if (!encryptedToken) return;
+
+            const decryptedToken = await decryptData(encryptedToken, masterPass);
+            
+            if (decryptedToken) {
+                authToken = decryptedToken;
+                isAdmin = true;
                 updateUIState();
                 fetchData();
+                return true;
             } else {
-                alert("Invalid token format. Must contain 'pat_' (e.g., github_pat_...)");
+                return false;
             }
         }
 
@@ -847,10 +938,33 @@
         }
 
         // --- INIT ---
-        window.onload = function() {
-            updateUIState();
-            fetchData();
-            fetchPageStatus();
+        window.onload = async function() {
+            const hasPass = localStorage.getItem('gh_has_master_pass');
+            
+            if (hasPass === 'true') {
+                // User has a saved encrypted token, ask for password
+                const masterPass = prompt("Enter your Master Password to unlock your session:");
+                if (masterPass) {
+                    const success = await unlockSession(masterPass);
+                    if (!success) {
+                        alert("Incorrect password. Please refresh and try again.");
+                        // Clear bad state
+                        localStorage.removeItem('gh_token_enc');
+                        localStorage.removeItem('gh_has_master_pass');
+                        showLogin(); // Show login to re-enter
+                    }
+                } else {
+                    showLogin();
+                }
+            } else {
+                // First time or no password set
+                showLogin();
+            }
+            
+            // Always fetch data if logged in
+            if (isAdmin) {
+                fetchData();
+            }
         };
     </script>
 </body>
