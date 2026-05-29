@@ -97,7 +97,7 @@
         .quest-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px; /* Reduced gap slightly */
             width: 100%;
         }
 
@@ -108,18 +108,20 @@
             flex-shrink: 0;
         }
 
+        /* FIXED: Wrapper takes all remaining space */
         .editable-title-wrapper {
-            flex-grow: 1;
-            min-width: 0;
+            flex: 1 1 0; /* Grow, Shrink, Basis 0 */
+            min-width: 0; /* Critical for flex text truncation */
+            display: flex;
+            align-items: center;
         }
 
         .editable-title {
-            flex-grow: 1;
+            width: 100%;
             font-weight: bold;
             border: 1px dashed transparent;
             padding: 2px 4px;
             background: transparent;
-            min-width: 0;
             color: var(--text);
             word-break: break-word;
             line-height: 1.4;
@@ -135,13 +137,12 @@
         .quest-meta {
             font-size: 0.8rem;
             color: #666;
-            margin-left: auto;
-            min-width: 100px;
-            text-align: right;
+            margin-left: 5px;
             flex-shrink: 0;
+            white-space: nowrap;
         }
 
-        /* Hide delete button by default */
+        /* FIXED: Delete button hidden by default */
         .delete-btn {
             display: none;
             padding: 2px 6px;
@@ -155,7 +156,7 @@
             margin-left: 5px;
         }
 
-        /* Show delete button when the item is being edited */
+        /* FIXED: Show delete button when parent has 'editing' class */
         .quest-item.editing .delete-btn {
             display: inline-block;
         }
@@ -488,15 +489,20 @@
                 const isAllSubtasksDone = task.subtasks.length === 0 || task.subtasks.every(st => st.done);
                 const shouldCheck = task.completed || (task.subtasks.length > 0 && isAllSubtasksDone);
 
+                // FIXED: Moved onfocus/onblur to the inner div
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" class="quest-checkbox" 
                             ${shouldCheck ? 'checked' : ''} 
                             ${isAdmin ? '' : 'disabled'}
                             onchange="toggleTask(${index})">
-                        <div class="editable-title-wrapper" onfocus="this.parentElement.parentElement.classList.add('editing')" onblur="this.parentElement.parentElement.classList.remove('editing')">
+                        <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                `<div class="editable-title" contenteditable="true" 
+                                    onfocus="this.parentElement.parentElement.parentElement.classList.add('editing')" 
+                                    onblur="this.parentElement.parentElement.parentElement.classList.remove('editing')"
+                                    onblur="updateTitle(${index}, this.innerText)" 
+                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text">${escapeHtml(task.title)}</span>`
                             }
                         </div>
@@ -514,12 +520,17 @@
                 const li = document.createElement('li');
                 li.className = 'quest-item';
                 li.style.opacity = '0.7';
+                // FIXED: Same focus logic for completed tasks
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" disabled checked>
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" contenteditable="true" onblur="updateTitle(${index}, this.innerText)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                `<div class="editable-title" contenteditable="true" 
+                                    onfocus="this.parentElement.parentElement.parentElement.classList.add('editing')" 
+                                    onblur="this.parentElement.parentElement.parentElement.classList.remove('editing')"
+                                    onblur="updateTitle(${index}, this.innerText)" 
+                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
                             }
                         </div>
@@ -668,14 +679,16 @@
             });
         }
 
-        // --- FETCH LATEST COMMIT ---
+        // --- FETCH LATEST COMMIT (FIXED) ---
         async function fetchLatestCommit() {
             const shaDisplay = document.getElementById('commitSha');
             shaDisplay.innerText = "Checking...";
 
             try {
                 const timestamp = Date.now();
-                const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1&_t=${timestamp}`;
+                
+                // 1. Try to get commits for the specific file first
+                let url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${FILE_PATH}&per_page=1&_t=${timestamp}`;
                 
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
@@ -683,38 +696,47 @@
                 };
                 if (authToken) headers['Authorization'] = `token ${authToken}`;
 
-                console.log("Fetching commit from:", url);
+                console.log("Fetching file commits:", url);
                 
-                const response = await fetch(url, { 
+                let response = await fetch(url, { 
                     headers, 
                     cache: 'no-store',
                     mode: 'cors'
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                let data = [];
+                if (response.ok) {
+                    data = await response.json();
                 }
 
-                const data = await response.json();
-                console.log("Commit data:", data);
+                let sha = null;
 
-                if (data && data.length > 0) {
-                    const sha = data[0].sha.substring(0, 7);
-                    shaDisplay.innerText = sha;
-                    checkForUpdates(sha);
-                } else {
-                    console.warn("No commits for file, trying branch head...");
+                // 2. If no file commits, get the latest branch commit (Fallback)
+                if (!data || data.length === 0) {
+                    console.warn("No commits for file, fetching branch head...");
                     const fallbackUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${timestamp}`;
                     const fallbackRes = await fetch(fallbackUrl, { headers, cache: 'no-store' });
+                    
                     if (fallbackRes.ok) {
                         const fallbackData = await fallbackRes.json();
                         if (fallbackData && fallbackData.length > 0) {
-                            const sha = fallbackData[0].sha.substring(0, 7);
-                            shaDisplay.innerText = sha + " (Branch)";
-                            checkForUpdates(sha);
+                            sha = fallbackData[0].sha.substring(0, 7);
+                            console.log("Using branch head commit:", sha);
                         }
                     }
+                } else {
+                    sha = data[0].sha.substring(0, 7);
+                    console.log("Using file commit:", sha);
                 }
+
+                if (sha) {
+                    shaDisplay.innerText = sha;
+                    checkForUpdates(sha);
+                } else {
+                    shaDisplay.innerText = "Err";
+                    console.error("Could not find any commits.");
+                }
+
             } catch (e) {
                 console.error("Failed to fetch commit:", e);
                 shaDisplay.innerText = "Err";
