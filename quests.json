@@ -5,11 +5,6 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": [
-      {
-        "text": "Get loot",
-        "done": false
-      }
-    ]
+    "subtasks": []
   }
 ]
