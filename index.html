@@ -578,12 +578,12 @@
                             onchange="toggleTaskById('${task.id}')">
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                // EDIT MODE: Show plain text for easy editing
+                                // EDIT MODE: Show Icons, but make editable
                                 `<div class="editable-title" 
                                     contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
-                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${injectNPCIcons(task.title)}</div>` : 
                                 // VIEW MODE: Inject Icons
                                 `<span class="quest-text">${injectNPCIcons(task.title)}</span>`
                             }
@@ -610,7 +610,7 @@
                                     contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
-                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
+                                    onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${injectNPCIcons(task.title)}</div>` : 
                                 `<span class="quest-text" style="text-decoration: line-through;">${injectNPCIcons(task.title)}</span>`
                             }
                         </div>
@@ -634,8 +634,8 @@
                 div.innerHTML = `
                     <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtaskById('${taskId}', ${stIndex})">
                     ${isAdmin ? 
-                        // EDIT MODE: Plain text div (no icons injected here so it's editable)
-                        `<div class="subtask-input" contenteditable="true" onblur="updateSubtextById('${taskId}', ${stIndex}, this.innerText)">${escapeHtml(st.text)}</div>` : 
+                        // EDIT MODE: Show Icons, but make editable
+                        `<div class="subtask-input" contenteditable="true" onblur="updateSubtextById('${taskId}', ${stIndex}, this.innerText)">${injectNPCIcons(st.text)}</div>` : 
                         // VIEW MODE: Inject Icons into the span
                         `<span class="subtask-input">${injectNPCIcons(st.text)}</span>`
                     }
