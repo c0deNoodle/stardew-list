@@ -8,32 +8,11 @@
     "subtasks": []
   },
   {
-    "id": "1780081238759",
-    "title": "Skull Cavern Lvl 25",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
-    "id": "1000000000028",
-    "title": "[Bday] Caroline",
-    "season": "Winter",
-    "day": "7",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000029",
     "title": "[Bday] Sebastian",
     "season": "Winter",
     "day": "10",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
@@ -105,6 +84,27 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1000000000028",
+    "title": "[Bday] Caroline",
+    "season": "Winter",
+    "day": "7",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780081238759",
+    "title": "Skull Cavern Lvl 25",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780081269502",
