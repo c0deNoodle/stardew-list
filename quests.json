@@ -8,24 +8,11 @@
     "subtasks": []
   },
   {
-    "id": "1000000000029",
-    "title": "[Bday] Sebastian",
-    "season": "Winter",
-    "day": "10",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000030",
     "title": "[Bday] Harvey",
     "season": "Winter",
     "day": "14",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)",
@@ -81,6 +68,19 @@
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000029",
+    "title": "[Bday] Sebastian",
+    "season": "Winter",
+    "day": "10",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
         "done": false
       }
     ]
