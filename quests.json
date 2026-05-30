@@ -1,5 +1,18 @@
 [
   {
+    "id": "1000000000026",
+    "title": "[Bday] Krobus",
+    "season": "Winter",
+    "day": "1",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1780100113673",
     "title": "Visit the casino",
     "season": "",
@@ -22,19 +35,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000026",
-    "title": "[Bday] Krobus",
-    "season": "Winter",
-    "day": "1",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000027",
