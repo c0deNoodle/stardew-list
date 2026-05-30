@@ -167,6 +167,7 @@
             font-size: 0.9rem;
         }
 
+        /* Lines 215-222 */
         .subtask-input {
             flex-grow: 1;
             border: none;
@@ -174,10 +175,20 @@
             border-bottom: 1px dotted #ccc;
             font-family: inherit;
             font-size: 0.9rem;
+            outline: none;
+            /* Ensure it acts like a block for wrapping when focused */
+            display: inline-block; 
+            min-width: 100px;
         }
         .subtask-input:focus {
             border-bottom: 1px solid var(--border);
-            outline: none;
+            /* Allow wrapping */
+            white-space: normal; 
+            word-wrap: break-word;
+            /* Ensure it expands vertically */
+            height: auto; 
+            line-height: 1.4;
+            padding: 2px 0;
         }
 
         .add-subtask-btn {
@@ -552,7 +563,7 @@
                 div.innerHTML = `
                     <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtaskById('${taskId}', ${stIndex})">
                     ${isAdmin ? 
-                        `<input type="text" class="subtask-input" value="${escapeHtml(st.text)}" onchange="updateSubtextById('${taskId}', ${stIndex}, this.value)">` : 
+                        `<div class="subtask-input" contenteditable="true" onblur="updateSubtextById('${taskId}', ${stIndex}, this.innerText)">${escapeHtml(st.text)}</div>` : 
                         `<span class="subtask-input">${escapeHtml(st.text)}</span>`
                     }
                     ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtaskById('${taskId}', ${stIndex})">x</button>` : ''}
