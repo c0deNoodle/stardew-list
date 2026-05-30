@@ -1,13 +1,5 @@
 [
   {
-    "id": "1780081269502",
-    "title": "Add Super Cucumber to new pond",
-    "season": "Winter",
-    "day": "1",
-    "completed": true,
-    "subtasks": []
-  },
-  {
     "id": "1780100113673",
     "title": "Visit the casino",
     "season": "",
@@ -20,7 +12,7 @@
     "title": "Skull Cavern Lvl 25",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -113,6 +105,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780081269502",
+    "title": "Add Super Cucumber to new pond",
+    "season": "Winter",
+    "day": "1",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1000000000027",
