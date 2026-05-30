@@ -528,6 +528,30 @@
             }
         }
 
+        // --- Inject NPC Icons (prepend name) ---
+        function injectNPCIcons(text) {
+            if (!text) return "";
+            
+            let processedText = text;
+            
+            // Iterate through our NPC map
+            for (const [name, filename] of Object.entries(NPC_ICONS)) {
+                // Match the whole word, case insensitive
+                const regex = new RegExp(`\\b${name}\\b`, 'gi');
+                
+                // Replace "Name" with "Icon Name"
+                // Note: We use the variable 'name' to ensure we keep the original casing of the name in the text
+                // Actually, regex 'gi' captures the case in the text. 
+                // To be safe and preserve the exact text casing (e.g. "sam" vs "Sam"), we can use a function:
+                
+                processedText = processedText.replace(regex, (match) => {
+                    return `<img src="IMAGES/NPCs/${filename}" alt="${name}" style="height: 1em; vertical-align: middle; margin-right: 2px; margin-left: 2px; border-radius: 50%;"> ${match}`;
+                });
+            }
+            
+            return processedText;
+        }
+
         // --- UI LOGIC ---
         function render() {
             const activeList = document.getElementById('activeList');
@@ -619,30 +643,6 @@
                 `;
                 container.appendChild(div);
             });
-        }
-
-        // --- Inject NPC Icons (prepend name) ---
-        function injectNPCIcons(text) {
-            if (!text) return "";
-            
-            let processedText = text;
-            
-            // Iterate through our NPC map
-            for (const [name, filename] of Object.entries(NPC_ICONS)) {
-                // Match the whole word, case insensitive
-                const regex = new RegExp(`\\b${name}\\b`, 'gi');
-                
-                // Replace "Name" with "Icon Name"
-                // Note: We use the variable 'name' to ensure we keep the original casing of the name in the text
-                // Actually, regex 'gi' captures the case in the text. 
-                // To be safe and preserve the exact text casing (e.g. "sam" vs "Sam"), we can use a function:
-                
-                processedText = processedText.replace(regex, (match) => {
-                    return `<img src="IMAGES/NPCs/${filename}" alt="${name}" style="height: 1em; vertical-align: middle; margin-right: 2px; margin-left: 2px; border-radius: 50%;"> ${match}`;
-                });
-            }
-            
-            return processedText;
         }
 
         function escapeHtml(text) {
