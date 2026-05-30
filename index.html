@@ -318,7 +318,9 @@
         <div class="controls">
             <button class="refresh-btn" onclick="fetchData()">🔄 Refresh</button>
             <button class="login-btn" id="loginBtn" onclick="showLogin()">🔑 Login to Edit</button>
-            <div id="lockStatus" class="locked-msg" style="margin-left: 10px;">View Only</div>
+            <div id="pageStatus" style="margin-left: 10px; font-size: 0.75rem; color: #888; display: none;">
+                Checking...
+            </div>
         </div>
 
         <div class="quest-section">
@@ -333,7 +335,6 @@
 
         <!-- Footer -->
         <footer style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888; line-height: 1.6;">
-            <div>Last Commit — <span id="pageStatus">Loading...</span></div>
             <div style="margin-top: 10px;">
                 <span id="disclaimer">
                     Stardew Valley is developed by <a href="https://x.com/concernedape" target="_blank" rel="noopener noreferrer">ConcernedApe</a> and self-published on most platforms.
@@ -810,9 +811,11 @@
         // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
         async function fetchPageStatus() {
             const statusSpan = document.getElementById('pageStatus');
+            
+            statusSpan.style.display = 'inline'; // Make sure it's visible
             statusSpan.innerText = "Checking...";
             statusSpan.className = "";
-
+            
             try {
                 // 1. Fetch the LATEST commit on the main branch (Repository HEAD)
                 const latestCommitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
@@ -849,28 +852,27 @@
                     console.warn("Could not fetch deployment status. Assuming latest is live.");
                     liveSha = latestSha;
                 }
-
                 // 3. Compare and Format
                 if (liveSha === latestSha) {
                     // MATCH: Updated
-                    statusSpan.innerText = `Updated ✔ (Current commit: ${liveSha})`;
-                    statusSpan.className = "status-updated";
+                    statusSpan.innerText = `Updated ✔ (Current: ${liveSha})`;
+                    statusSpan.style.color = 'var(--success)'; // Green
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // MISMATCH: Pending
-                    statusSpan.innerText = `⚠️ Pending update (Current commit: ${liveSha} - Pending commit: ${latestSha})`;
-                    statusSpan.className = "status-pending";
+                    statusSpan.innerText = `⚠️ Pending (${liveSha} -> ${latestSha})`;
+                    statusSpan.style.color = 'var(--danger)'; // Red
                     
                     // Show the banner
                     const banner = document.getElementById('updateBanner');
                     banner.style.display = 'block';
-                    banner.innerHTML = `⚠️ New commit detected. GitHub Pages is deploying. <br>Please refresh in 1-2 minutes to see changes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
+                    banner.innerHTML = `⚠️ New commit detected. GitHub Pages is deploying. <br>Please refresh in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
                 }
 
             } catch (e) {
                 console.error("Status check failed:", e);
                 statusSpan.innerText = "Error checking status";
-                statusSpan.className = "";
+                statusSpan.style.color = '#888';
             }
         }
 
@@ -914,19 +916,14 @@
         function updateUIState() {
             const adminPanel = document.getElementById('adminPanel');
             const loginBtn = document.getElementById('loginBtn');
-            const lockStatus = document.getElementById('lockStatus');
 
             if (isAdmin) {
                 adminPanel.classList.add('active');
                 loginBtn.style.display = 'none';
-                lockStatus.innerText = "Editing Enabled";
-                lockStatus.style.color = "green";
                 setStatus('idle');
             } else {
                 adminPanel.classList.remove('active');
                 loginBtn.style.display = 'inline-block';
-                lockStatus.innerText = "View Only";
-                lockStatus.style.color = "#666";
                 setStatus('idle');
             }
         }
