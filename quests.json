@@ -5,7 +5,12 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": []
+    "subtasks": [
+      {
+        "text": "",
+        "done": false
+      }
+    ]
   },
   {
     "id": "1780081269502",
@@ -30,45 +35,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000026",
-    "title": "[Bday] Krobus",
-    "season": "Winter",
-    "day": "1",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000027",
-    "title": "[Bday] Linus",
-    "season": "Winter",
-    "day": "3",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000028",
-    "title": "[Bday] Caroline",
-    "season": "Winter",
-    "day": "7",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000029",
@@ -144,6 +110,45 @@
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000026",
+    "title": "[Bday] Krobus",
+    "season": "Winter",
+    "day": "1",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000027",
+    "title": "[Bday] Linus",
+    "season": "Winter",
+    "day": "3",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000028",
+    "title": "[Bday] Caroline",
+    "season": "Winter",
+    "day": "7",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
         "done": false
       }
     ]
