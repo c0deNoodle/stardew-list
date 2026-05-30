@@ -13,14 +13,6 @@
     ]
   },
   {
-    "id": "1780100113673",
-    "title": "Visit the casino",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
     "id": "1000000000032",
     "title": "[Bday] Evelyn",
     "season": "Winter",
@@ -32,6 +24,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780100113673",
+    "title": "Visit the casino",
+    "season": "",
+    "day": "",
+    "completed": false,
+    "subtasks": []
   },
   {
     "id": "1000000000034",
