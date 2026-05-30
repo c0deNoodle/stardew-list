@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stardew Valley Quest Log</title>
+    <title>A Stardew Valley Quest Log</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -561,7 +561,7 @@
                                     onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
                                 // VIEW MODE: Inject Icons
-                                `<span class="quest-text">${injectNPCIcons(escapeHtml(task.title))}</span>`
+                                `<span class="quest-text">${injectNPCIcons(task.title)}</span>`
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
@@ -587,7 +587,7 @@
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>` : 
-                                `<span class="quest-text" style="text-decoration: line-through;">${escapeHtml(task.title)}</span>`
+                                `<span class="quest-text" style="text-decoration: line-through;">${injectNPCIcons(task.title)}</span>`
                             }
                         </div>
                         <span class="quest-meta">${task.season ? `${task.season} ${task.day}` : ''}</span>
@@ -613,7 +613,7 @@
                         // EDIT MODE: Plain text div (no icons injected here so it's editable)
                         `<div class="subtask-input" contenteditable="true" onblur="updateSubtextById('${taskId}', ${stIndex}, this.innerText)">${escapeHtml(st.text)}</div>` : 
                         // VIEW MODE: Inject Icons into the span
-                        `<span class="subtask-input">${injectNPCIcons(escapeHtml(st.text))}</span>`
+                        `<span class="subtask-input">${injectNPCIcons(st.text)}</span>`
                     }
                     ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtaskById('${taskId}', ${stIndex})">x</button>` : ''}
                 `;
