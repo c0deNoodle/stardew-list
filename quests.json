@@ -1,26 +1,5 @@
 [
   {
-    "id": "1780187208644",
-    "title": "Deluxe Water Retainer",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "50 cinder shards to island trader",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1780187099655",
-    "title": "1 Iridium Bar to Wizard",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
     "id": "1780100113673",
     "title": "Visit the casino",
     "season": "",
@@ -29,11 +8,24 @@
     "subtasks": []
   },
   {
+    "id": "1000000000031",
+    "title": "[Bday] Wizard",
+    "season": "Winter",
+    "day": "17",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000032",
     "title": "[Bday] Evelyn",
     "season": "Winter",
     "day": "20",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
@@ -63,19 +55,6 @@
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000031",
-    "title": "[Bday] Wizard",
-    "season": "Winter",
-    "day": "17",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
         "done": false
       }
     ]
