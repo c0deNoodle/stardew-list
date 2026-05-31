@@ -5,7 +5,12 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": []
+    "subtasks": [
+      {
+        "text": "",
+        "done": false
+      }
+    ]
   },
   {
     "id": "1780187099655",
@@ -22,19 +27,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000031",
-    "title": "[Bday] Wizard",
-    "season": "Winter",
-    "day": "17",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000032",
@@ -71,6 +63,19 @@
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000031",
+    "title": "[Bday] Wizard",
+    "season": "Winter",
+    "day": "17",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
         "done": false
       }
     ]
