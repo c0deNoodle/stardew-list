@@ -25,35 +25,6 @@
     ]
   },
   {
-    "id": "1780192670454",
-    "title": "Collect gold walnuts on ginger island",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "5 for�1st parrot",
-        "done": false
-      },
-      {
-        "text": "10 to unlock left area",
-        "done": false
-      },
-      {
-        "text": "Slingshot for several",
-        "done": false
-      },
-      {
-        "text": "Fishing",
-        "done": false
-      },
-      {
-        "text": "Mining",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780191307275",
     "title": "Reorganize buildings",
     "season": "",
@@ -86,6 +57,35 @@
       },
       {
         "text": "Move animal production left, shift animal buildings/wall",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780192670454",
+    "title": "Collect gold walnuts on ginger island",
+    "season": "",
+    "day": "",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "5 for 1st parrot",
+        "done": false
+      },
+      {
+        "text": "10 to unlock left area",
+        "done": false
+      },
+      {
+        "text": "Slingshot for several",
+        "done": false
+      },
+      {
+        "text": "Fishing",
+        "done": false
+      },
+      {
+        "text": "Mining",
         "done": false
       }
     ]
@@ -325,7 +325,7 @@
     "completed": true,
     "subtasks": [
       {
-        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Piña Colada",
+        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, PiÃ±a Colada",
         "done": false
       }
     ]
