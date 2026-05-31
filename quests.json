@@ -29,19 +29,6 @@
     "subtasks": []
   },
   {
-    "id": "1000000000032",
-    "title": "[Bday] Evelyn",
-    "season": "Winter",
-    "day": "20",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000034",
     "title": "[Bday] Clint",
     "season": "Winter",
@@ -63,6 +50,32 @@
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000011",
+    "title": "[Bday] Maru",
+    "season": "Summer",
+    "day": "10",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000032",
+    "title": "[Bday] Evelyn",
+    "season": "Winter",
+    "day": "20",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
         "done": false
       }
     ]
@@ -287,19 +300,6 @@
     "subtasks": [
       {
         "text": "Diamond, Fish Taco, Orange",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000011",
-    "title": "[Bday] Maru",
-    "season": "Summer",
-    "day": "10",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
         "done": false
       }
     ]
