@@ -4,7 +4,7 @@
     "title": "Reorganize buildings",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Move shopping bin to right entrance",
@@ -120,19 +120,6 @@
     "subtasks": []
   },
   {
-    "id": "1000000000033",
-    "title": "[Bday] Leah",
-    "season": "Winter",
-    "day": "23",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000034",
     "title": "[Bday] Clint",
     "season": "Winter",
@@ -141,6 +128,19 @@
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000033",
+    "title": "[Bday] Leah",
+    "season": "Winter",
+    "day": "23",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
         "done": false
       }
     ]
