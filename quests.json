@@ -103,7 +103,7 @@
     "title": "1 Iridium Bar to Wizard",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -113,19 +113,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000001",
-    "title": "[Bday] Kent",
-    "season": "Spring",
-    "day": "4",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000002",
@@ -214,6 +201,19 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000001",
+    "title": "[Bday] Kent",
+    "season": "Spring",
+    "day": "4",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
         "done": false
       }
     ]
