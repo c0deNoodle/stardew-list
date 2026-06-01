@@ -1,5 +1,21 @@
 [
   {
+    "id": "1780277266146",
+    "title": "Move iridium statues",
+    "season": "",
+    "day": "",
+    "completed": false,
+    "subtasks": []
+  },
+  {
+    "id": "1780277253689",
+    "title": "Pave animal area (wood+cobblestone)",
+    "season": "",
+    "day": "",
+    "completed": false,
+    "subtasks": []
+  },
+  {
     "id": "1780277217134",
     "title": "Add another pond (stourgeon)",
     "season": "",
@@ -12,7 +28,7 @@
     "title": "Sea cucumber in pond",
     "season": "",
     "day": "",
-    "completed": true,
+    "completed": false,
     "subtasks": []
   },
   {
@@ -103,7 +119,7 @@
     "title": "[Bday] Kent",
     "season": "Spring",
     "day": "4",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
@@ -201,22 +217,6 @@
         "done": false
       }
     ]
-  },
-  {
-    "id": "1780277253689",
-    "title": "Pave animal area (wood+cobblestone)",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
-    "id": "1780277266146",
-    "title": "Move iridium statues",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
   },
   {
     "id": "1780191307275",
