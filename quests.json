@@ -328,7 +328,7 @@
     "title": "[Bday] Vincent",
     "season": "Spring",
     "day": "10",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Cranberry Candy, Pink Cake, Grape, Snail",
@@ -341,7 +341,7 @@
     "title": "[Bday] Haley",
     "season": "Spring",
     "day": "14",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
@@ -354,7 +354,7 @@
     "title": "[Bday] Pam",
     "season": "Spring",
     "day": "18",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, PiÃ±a Colada",
@@ -367,7 +367,7 @@
     "title": "[Bday] Shane",
     "season": "Spring",
     "day": "20",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
@@ -380,7 +380,7 @@
     "title": "[Bday] Pierre",
     "season": "Spring",
     "day": "26",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
@@ -393,7 +393,7 @@
     "title": "[Bday] Emily",
     "season": "Spring",
     "day": "27",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
