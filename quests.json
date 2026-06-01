@@ -4,7 +4,7 @@
     "title": "Move iridium statues",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -97,14 +97,6 @@
         "done": false
       }
     ]
-  },
-  {
-    "id": "1780187099655",
-    "title": "1 Iridium Bar to Wizard",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
   },
   {
     "id": "1780100113673",
@@ -204,6 +196,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780187099655",
+    "title": "1 Iridium Bar to Wizard",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1000000000001",
