@@ -1,18 +1,10 @@
 [
   {
-    "id": "1780262771975",
-    "title": "Explore sewer mines",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
     "id": "1780191307275",
     "title": "Reorganize buildings",
     "season": "",
     "day": "",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Move shopping bin to right entrance",
@@ -77,7 +69,7 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "5 for 1st parrot",
+        "text": "5 for 1st parrot",
         "done": false
       },
       {
@@ -132,7 +124,7 @@
     "title": "[Bday] Clint",
     "season": "Winter",
     "day": "26",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
@@ -145,7 +137,7 @@
     "title": "[Bday] Leah",
     "season": "Winter",
     "day": "23",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
