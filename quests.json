@@ -1,13 +1,5 @@
 [
   {
-    "id": "1780277266146",
-    "title": "Move iridium statues",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
     "id": "1780277253689",
     "title": "Pave animal area (wood+cobblestone)",
     "season": "",
@@ -28,7 +20,7 @@
     "title": "Sea cucumber in pond",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -196,6 +188,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780277266146",
+    "title": "Move iridium statues",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780187099655",
