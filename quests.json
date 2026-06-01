@@ -12,14 +12,6 @@
     "title": "Add another pond (stourgeon)",
     "season": "",
     "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
-    "id": "1780277180972",
-    "title": "Sea cucumber in pond",
-    "season": "",
-    "day": "",
     "completed": true,
     "subtasks": []
   },
@@ -188,6 +180,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780277180972",
+    "title": "Sea cucumber in pond",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780277266146",
