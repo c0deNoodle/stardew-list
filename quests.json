@@ -315,7 +315,7 @@
     "title": "[Bday] Lewis",
     "season": "Spring",
     "day": "7",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Hot Pepper, Rabbit's Foot, Vegetable Medley",
