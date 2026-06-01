@@ -40,14 +40,6 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "Storage bin",
-        "done": true
-      },
-      {
-        "text": "Bait machine",
-        "done": true
-      },
-      {
         "text": "Farm totem",
         "done": false
       },
