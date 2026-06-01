@@ -497,7 +497,7 @@
     "title": "[Bday] Leo",
     "season": "Summer",
     "day": "26",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
