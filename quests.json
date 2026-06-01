@@ -5,7 +5,12 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": []
+    "subtasks": [
+      {
+        "text": "",
+        "done": false
+      }
+    ]
   },
   {
     "id": "1780192823907",
@@ -81,19 +86,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000001",
-    "title": "[Bday] Kent",
-    "season": "Spring",
-    "day": "4",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000002",
@@ -182,6 +174,32 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000017",
+    "title": "[Bday] Leo",
+    "season": "Summer",
+    "day": "26",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000001",
+    "title": "[Bday] Kent",
+    "season": "Spring",
+    "day": "4",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
         "done": false
       }
     ]
@@ -496,19 +514,6 @@
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000017",
-    "title": "[Bday] Leo",
-    "season": "Summer",
-    "day": "26",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
         "done": false
       }
     ]
