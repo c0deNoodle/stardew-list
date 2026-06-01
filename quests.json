@@ -1,13 +1,5 @@
 [
   {
-    "id": "1780277253689",
-    "title": "Pave animal area (wood+cobblestone)",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
     "id": "1780277217134",
     "title": "Add another pond (stourgeon)",
     "season": "",
@@ -20,7 +12,7 @@
     "title": "Sea cucumber in pond",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -209,6 +201,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780277253689",
+    "title": "Pave animal area (wood+cobblestone)",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780277266146",
