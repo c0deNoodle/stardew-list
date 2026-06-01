@@ -1,13 +1,5 @@
 [
   {
-    "id": "1780277217134",
-    "title": "Add another pond (stourgeon)",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
     "id": "1780192823907",
     "title": "Ginger island",
     "season": "",
@@ -87,7 +79,7 @@
     "title": "[Bday] Kent",
     "season": "Spring",
     "day": "4",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
@@ -185,6 +177,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780277217134",
+    "title": "Add another pond (stourgeon)",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780187099655",
