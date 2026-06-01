@@ -41,11 +41,11 @@
     "subtasks": [
       {
         "text": "Storage bin",
-        "done": false
+        "done": true
       },
       {
         "text": "Bait machine",
-        "done": false
+        "done": true
       },
       {
         "text": "Farm totem",
