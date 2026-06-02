@@ -71,7 +71,7 @@
     "subtasks": [
       {
         "text": "5 for 1st parrot",
-        "done": false
+        "done": true
       },
       {
         "text": "10 to unlock left area",
@@ -98,19 +98,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000005",
@@ -186,6 +173,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
