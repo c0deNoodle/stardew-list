@@ -108,7 +108,7 @@
     "title": "[Bday] Pam",
     "season": "Spring",
     "day": "18",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
