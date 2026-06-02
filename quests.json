@@ -603,7 +603,7 @@
     "title": "[Bday] Sandy",
     "season": "Fall",
     "day": "15",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
