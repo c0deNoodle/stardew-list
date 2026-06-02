@@ -12,7 +12,7 @@
     "title": "Visit combat mastery cave",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": []
   },
   {
@@ -116,19 +116,6 @@
     "subtasks": []
   },
   {
-    "id": "1000000000002",
-    "title": "[Bday] Lewis",
-    "season": "Spring",
-    "day": "7",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Hot Pepper, Rabbit's Foot, Vegetable Medley",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000003",
     "title": "[Bday] Vincent",
     "season": "Spring",
@@ -215,6 +202,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000002",
+    "title": "[Bday] Lewis",
+    "season": "Spring",
+    "day": "7",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Hot Pepper, Rabbit's Foot, Vegetable Medley",
         "done": false
       }
     ]
