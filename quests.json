@@ -1,21 +1,5 @@
 [
   {
-    "id": "1780345084106",
-    "title": "Pond: Rainbow trout",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
-    "id": "1780328347874",
-    "title": "Visit combat mastery cave",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": []
-  },
-  {
     "id": "1780289949630",
     "title": "Joja missing bundle",
     "season": "",
@@ -86,12 +70,12 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "5 for 1st parrot",
-        "done": false
+        "text": "5 for 1st parrot",
+        "done": true
       },
       {
         "text": "10 to unlock left area",
-        "done": false
+        "done": true
       },
       {
         "text": "Slingshot for several",
@@ -104,6 +88,10 @@
       {
         "text": "Mining",
         "done": false
+      },
+      {
+        "text": "20 for sleep cabin",
+        "done": false
       }
     ]
   },
@@ -114,19 +102,6 @@
     "day": "",
     "completed": false,
     "subtasks": []
-  },
-  {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
-        "done": false
-      }
-    ]
   },
   {
     "id": "1000000000005",
@@ -194,6 +169,40 @@
     ]
   },
   {
+    "id": "1000000000022",
+    "title": "[Bday] Sandy",
+    "season": "Fall",
+    "day": "15",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780345084106",
+    "title": "Pond: Rainbow trout",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
+  },
+  {
     "id": "1000000000003",
     "title": "[Bday] Vincent",
     "season": "Spring",
@@ -205,6 +214,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780328347874",
+    "title": "Visit combat mastery cave",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1000000000002",
@@ -594,19 +611,6 @@
     "subtasks": [
       {
         "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000022",
-    "title": "[Bday] Sandy",
-    "season": "Fall",
-    "day": "15",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Crocus, Daffodil, Sweet Pea",
         "done": false
       }
     ]
