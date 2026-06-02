@@ -8,14 +8,6 @@
     "subtasks": []
   },
   {
-    "id": "1780328347874",
-    "title": "Visit combat mastery cave",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
     "id": "1780289949630",
     "title": "Joja missing bundle",
     "season": "",
@@ -120,7 +112,7 @@
     "title": "[Bday] Vincent",
     "season": "Spring",
     "day": "10",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Cranberry Candy, Pink Cake, Grape, Snail",
@@ -205,6 +197,14 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1780328347874",
+    "title": "Visit combat mastery cave",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1000000000002",
