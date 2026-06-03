@@ -46,6 +46,10 @@
       {
         "text": "Food: luck/health",
         "done": false
+      },
+      {
+        "text": "",
+        "done": false
       }
     ]
   },
@@ -104,11 +108,37 @@
     "subtasks": []
   },
   {
+    "id": "1000000000006",
+    "title": "[Bday] Shane",
+    "season": "Spring",
+    "day": "20",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000007",
+    "title": "[Bday] Pierre",
+    "season": "Spring",
+    "day": "26",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000008",
     "title": "[Bday] Emily",
     "season": "Spring",
     "day": "27",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
@@ -138,32 +168,6 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000007",
-    "title": "[Bday] Pierre",
-    "season": "Spring",
-    "day": "26",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000006",
-    "title": "[Bday] Shane",
-    "season": "Spring",
-    "day": "20",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
         "done": false
       }
     ]
@@ -477,7 +481,7 @@
     "title": "[Bday] Jas",
     "season": "Summer",
     "day": "4",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot",
@@ -490,7 +494,7 @@
     "title": "[Bday] Gus",
     "season": "Summer",
     "day": "8",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Diamond, Fish Taco, Orange",
@@ -503,7 +507,7 @@
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
@@ -516,7 +520,7 @@
     "title": "[Bday] Sam",
     "season": "Summer",
     "day": "17",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
@@ -529,7 +533,7 @@
     "title": "[Bday] Demetrius",
     "season": "Summer",
     "day": "19",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
@@ -542,7 +546,7 @@
     "title": "[Bday] Dwarf",
     "season": "Summer",
     "day": "22",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
@@ -555,7 +559,7 @@
     "title": "[Bday] Willy",
     "season": "Summer",
     "day": "24",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
