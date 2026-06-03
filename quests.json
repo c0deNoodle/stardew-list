@@ -104,14 +104,14 @@
     "subtasks": []
   },
   {
-    "id": "1000000000005",
-    "title": "[Bday] Pam",
+    "id": "1000000000007",
+    "title": "[Bday] Pierre",
     "season": "Spring",
-    "day": "18",
-    "completed": true,
+    "day": "26",
+    "completed": false,
     "subtasks": [
       {
-        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
+        "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
         "done": false
       }
     ]
@@ -125,19 +125,6 @@
     "subtasks": [
       {
         "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000007",
-    "title": "[Bday] Pierre",
-    "season": "Spring",
-    "day": "26",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
         "done": false
       }
     ]
@@ -177,6 +164,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000005",
+    "title": "[Bday] Pam",
+    "season": "Spring",
+    "day": "18",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
         "done": false
       }
     ]
