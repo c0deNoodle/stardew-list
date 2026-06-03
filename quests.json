@@ -108,7 +108,7 @@
     "title": "[Bday] Shane",
     "season": "Spring",
     "day": "20",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
