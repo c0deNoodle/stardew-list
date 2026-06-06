@@ -95,10 +95,6 @@
       },
       {
         "text": "20 for sleep cabin",
-        "done": true
-      },
-      {
-        "text": "",
         "done": false
       }
     ]
@@ -116,7 +112,7 @@
     "title": "[Bday] Shane",
     "season": "Spring",
     "day": "20",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
