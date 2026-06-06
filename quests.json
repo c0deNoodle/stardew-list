@@ -108,19 +108,6 @@
     "subtasks": []
   },
   {
-    "id": "1000000000022",
-    "title": "[Bday] Sandy",
-    "season": "Fall",
-    "day": "15",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Crocus, Daffodil, Sweet Pea",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000009",
     "title": "[Bday] Jas",
     "season": "Summer",
@@ -220,6 +207,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000022",
+    "title": "[Bday] Sandy",
+    "season": "Fall",
+    "day": "15",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Crocus, Daffodil, Sweet Pea",
         "done": false
       }
     ]
