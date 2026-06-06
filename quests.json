@@ -5,7 +5,12 @@
     "season": "",
     "day": "",
     "completed": false,
-    "subtasks": []
+    "subtasks": [
+      {
+        "text": "",
+        "done": false
+      }
+    ]
   },
   {
     "id": "1780289949630",
