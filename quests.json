@@ -520,7 +520,7 @@
     "title": "[Bday] Sam",
     "season": "Summer",
     "day": "17",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
@@ -533,7 +533,7 @@
     "title": "[Bday] Demetrius",
     "season": "Summer",
     "day": "19",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
@@ -546,7 +546,7 @@
     "title": "[Bday] Dwarf",
     "season": "Summer",
     "day": "22",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
@@ -559,7 +559,7 @@
     "title": "[Bday] Willy",
     "season": "Summer",
     "day": "24",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
