@@ -75,7 +75,7 @@
     "title": "Deluxe Water Retainer Recipe",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "50 cinder shards to island trader",
