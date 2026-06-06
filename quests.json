@@ -481,7 +481,7 @@
     "title": "[Bday] Jas",
     "season": "Summer",
     "day": "4",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot",
@@ -494,7 +494,7 @@
     "title": "[Bday] Gus",
     "season": "Summer",
     "day": "8",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Diamond, Fish Taco, Orange",
@@ -507,7 +507,7 @@
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
