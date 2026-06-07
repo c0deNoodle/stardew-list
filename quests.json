@@ -54,7 +54,7 @@
     "title": "Ginger island",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Farm totem",
