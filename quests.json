@@ -57,10 +57,6 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "5 for 1st parrot",
-        "done": true
-      },
-      {
         "text": "Fishing",
         "done": false
       },
