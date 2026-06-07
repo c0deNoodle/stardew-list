@@ -646,7 +646,7 @@
     "title": "[Bday] Marnie",
     "season": "Fall",
     "day": "18",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
@@ -659,7 +659,7 @@
     "title": "[Bday] Robin",
     "season": "Fall",
     "day": "21",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Goat Cheese, Peach, Spaghetti",
@@ -672,7 +672,7 @@
     "title": "[Bday] George",
     "season": "Fall",
     "day": "24",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
