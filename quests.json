@@ -67,32 +67,11 @@
     ]
   },
   {
-    "id": "1780100113673",
-    "title": "Visit the desert casino",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": []
-  },
-  {
-    "id": "1000000000014",
-    "title": "[Bday] Demetrius",
-    "season": "Summer",
-    "day": "19",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000015",
     "title": "[Bday] Dwarf",
     "season": "Summer",
     "day": "22",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
@@ -138,6 +117,27 @@
         "done": false
       }
     ]
+  },
+  {
+    "id": "1000000000014",
+    "title": "[Bday] Demetrius",
+    "season": "Summer",
+    "day": "19",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780100113673",
+    "title": "Visit the desert casino",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": []
   },
   {
     "id": "1780801503350",
