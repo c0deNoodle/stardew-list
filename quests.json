@@ -91,24 +91,11 @@
     "subtasks": []
   },
   {
-    "id": "1000000000012",
-    "title": "[Bday] Alex",
-    "season": "Summer",
-    "day": "13",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000013",
     "title": "[Bday] Sam",
     "season": "Summer",
     "day": "17",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
@@ -177,6 +164,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000012",
+    "title": "[Bday] Alex",
+    "season": "Summer",
+    "day": "13",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
         "done": false
       }
     ]
