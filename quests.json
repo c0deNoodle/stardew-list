@@ -91,24 +91,11 @@
     "subtasks": []
   },
   {
-    "id": "1000000000010",
-    "title": "[Bday] Gus",
-    "season": "Summer",
-    "day": "8",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Diamond, Fish Taco, Orange",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000012",
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
@@ -190,6 +177,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000010",
+    "title": "[Bday] Gus",
+    "season": "Summer",
+    "day": "8",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Fish Taco, Orange",
         "done": false
       }
     ]
