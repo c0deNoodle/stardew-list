@@ -67,24 +67,11 @@
     ]
   },
   {
-    "id": "1000000000016",
-    "title": "[Bday] Willy",
-    "season": "Summer",
-    "day": "24",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000017",
     "title": "[Bday] Leo",
     "season": "Summer",
     "day": "26",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
@@ -101,6 +88,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000016",
+    "title": "[Bday] Willy",
+    "season": "Summer",
+    "day": "24",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
         "done": false
       }
     ]
