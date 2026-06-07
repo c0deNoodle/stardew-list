@@ -84,19 +84,6 @@
     ]
   },
   {
-    "id": "1000000000022",
-    "title": "[Bday] Sandy",
-    "season": "Fall",
-    "day": "15",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Crocus, Daffodil, Sweet Pea",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000019",
     "title": "[Bday] Elliott",
     "season": "Fall",
@@ -118,6 +105,19 @@
     "subtasks": [
       {
         "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000022",
+    "title": "[Bday] Sandy",
+    "season": "Fall",
+    "day": "15",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Crocus, Daffodil, Sweet Pea",
         "done": false
       }
     ]
