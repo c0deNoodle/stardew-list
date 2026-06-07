@@ -17,6 +17,27 @@
     ]
   },
   {
+    "id": "1780192670454",
+    "title": "Collect gold walnuts on Ginger Island",
+    "season": "",
+    "day": "",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Fishing",
+        "done": false
+      },
+      {
+        "text": "Mining",
+        "done": false
+      },
+      {
+        "text": "Golden coconuts",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1780289949630",
     "title": "Joja missing bundle",
     "season": "",
@@ -46,27 +67,6 @@
       {
         "text": "Caviar",
         "done": true
-      }
-    ]
-  },
-  {
-    "id": "1780192670454",
-    "title": "Collect gold walnuts on Ginger Island",
-    "season": "",
-    "day": "",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Fishing",
-        "done": false
-      },
-      {
-        "text": "Mining",
-        "done": false
-      },
-      {
-        "text": "Golden coconuts",
-        "done": false
       }
     ]
   },
