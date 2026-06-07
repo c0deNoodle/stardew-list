@@ -4,7 +4,7 @@
     "title": "House upgrade",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "65k",
@@ -75,7 +75,7 @@
     "title": "Deluxe Water Retainer Recipe",
     "season": "",
     "day": "",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "50 cinder shards to island trader",
