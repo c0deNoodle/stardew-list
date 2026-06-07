@@ -50,23 +50,6 @@
     ]
   },
   {
-    "id": "1780192823907",
-    "title": "Ginger island",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Farm totem",
-        "done": false
-      },
-      {
-        "text": "Food: luck/health",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780192670454",
     "title": "Collect gold walnuts on Ginger Island",
     "season": "",
@@ -112,7 +95,7 @@
     "title": "[Bday] Jas",
     "season": "Summer",
     "day": "4",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Fairy Rose, Pink Cake, Plum Pudding, Rabbit's Foot",
@@ -220,6 +203,23 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780192823907",
+    "title": "Ginger island",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Farm totem",
+        "done": false
+      },
+      {
+        "text": "Food: luck/health",
         "done": false
       }
     ]
