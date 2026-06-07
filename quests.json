@@ -63,6 +63,10 @@
       {
         "text": "Mining",
         "done": false
+      },
+      {
+        "text": "",
+        "done": false
       }
     ]
   },
