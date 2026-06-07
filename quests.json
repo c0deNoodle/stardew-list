@@ -1,22 +1,5 @@
 [
   {
-    "id": "1780782533215",
-    "title": "House upgrade",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "65k",
-        "done": false
-      },
-      {
-        "text": "100 hardwood",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780289949630",
     "title": "Joja missing bundle",
     "season": "",
@@ -75,7 +58,7 @@
     "title": "Deluxe Water Retainer Recipe",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "50 cinder shards to island trader",
@@ -237,6 +220,23 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780782533215",
+    "title": "House upgrade",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "65k",
+        "done": false
+      },
+      {
+        "text": "100 hardwood",
         "done": false
       }
     ]
