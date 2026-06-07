@@ -594,7 +594,7 @@
     "title": "[Bday] Penny",
     "season": "Fall",
     "day": "2",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
@@ -607,7 +607,7 @@
     "title": "[Bday] Elliott",
     "season": "Fall",
     "day": "5",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
@@ -620,7 +620,7 @@
     "title": "[Bday] Jodi",
     "season": "Fall",
     "day": "11",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
@@ -633,7 +633,7 @@
     "title": "[Bday] Abigail",
     "season": "Fall",
     "day": "13",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
