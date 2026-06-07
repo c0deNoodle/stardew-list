@@ -54,19 +54,6 @@
     ]
   },
   {
-    "id": "1780187208644",
-    "title": "Deluxe Water Retainer Recipe",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "50 cinder shards to island trader",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780192670454",
     "title": "Collect gold walnuts on Ginger Island",
     "season": "",
@@ -220,6 +207,19 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780187208644",
+    "title": "Deluxe Water Retainer Recipe",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "50 cinder shards to island trader",
         "done": false
       }
     ]
