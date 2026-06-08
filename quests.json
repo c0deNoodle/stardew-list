@@ -7,10 +7,6 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "Bring bones and totem",
-        "done": false
-      },
-      {
         "text": "Forge tools",
         "done": false
       },
