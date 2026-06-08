@@ -71,24 +71,11 @@
     ]
   },
   {
-    "id": "1000000000018",
-    "title": "[Bday] Penny",
-    "season": "Fall",
-    "day": "2",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000019",
     "title": "[Bday] Elliott",
     "season": "Fall",
     "day": "5",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
@@ -170,6 +157,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000018",
+    "title": "[Bday] Penny",
+    "season": "Fall",
+    "day": "2",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
         "done": false
       }
     ]
