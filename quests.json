@@ -71,24 +71,11 @@
     ]
   },
   {
-    "id": "1000000000021",
-    "title": "[Bday] Abigail",
-    "season": "Fall",
-    "day": "13",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000022",
     "title": "[Bday] Sandy",
     "season": "Fall",
     "day": "15",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
@@ -131,6 +118,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000021",
+    "title": "[Bday] Abigail",
+    "season": "Fall",
+    "day": "13",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
         "done": false
       }
     ]
