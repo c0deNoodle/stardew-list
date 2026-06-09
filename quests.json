@@ -9,10 +9,6 @@
       {
         "text": "Forge tools",
         "done": false
-      },
-      {
-        "text": "Dupe shards",
-        "done": false
       }
     ]
   },
@@ -67,19 +63,6 @@
       {
         "text": "Caviar",
         "done": true
-      }
-    ]
-  },
-  {
-    "id": "1000000000020",
-    "title": "[Bday] Jodi",
-    "season": "Fall",
-    "day": "11",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
-        "done": false
       }
     ]
   },
@@ -144,6 +127,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000020",
+    "title": "[Bday] Jodi",
+    "season": "Fall",
+    "day": "11",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
         "done": false
       }
     ]
