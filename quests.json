@@ -556,7 +556,7 @@
     "title": "[Bday] Clint",
     "season": "Winter",
     "day": "26",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
