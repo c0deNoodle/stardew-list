@@ -88,7 +88,7 @@
     "title": "[Bday] Marnie",
     "season": "Fall",
     "day": "18",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
