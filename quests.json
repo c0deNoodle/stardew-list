@@ -9,10 +9,6 @@
       {
         "text": "Forge tools",
         "done": false
-      },
-      {
-        "text": "Find ginger",
-        "done": false
       }
     ]
   },
@@ -71,19 +67,6 @@
     ]
   },
   {
-    "id": "1000000000024",
-    "title": "[Bday] Robin",
-    "season": "Fall",
-    "day": "21",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Goat Cheese, Peach, Spaghetti",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000025",
     "title": "[Bday] George",
     "season": "Fall",
@@ -92,6 +75,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000024",
+    "title": "[Bday] Robin",
+    "season": "Fall",
+    "day": "21",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Goat Cheese, Peach, Spaghetti",
         "done": false
       }
     ]
