@@ -608,7 +608,7 @@
     "title": "[Bday] Wizard",
     "season": "Winter",
     "day": "17",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
@@ -621,7 +621,7 @@
     "title": "[Bday] Harvey",
     "season": "Winter",
     "day": "14",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)",
