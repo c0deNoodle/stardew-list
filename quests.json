@@ -20,10 +20,6 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "Mining",
-        "done": false
-      },
-      {
         "text": "Golden coconuts",
         "done": false
       },
