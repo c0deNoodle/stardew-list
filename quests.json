@@ -595,7 +595,7 @@
     "title": "[Bday] Evelyn",
     "season": "Winter",
     "day": "20",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
