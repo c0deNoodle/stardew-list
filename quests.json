@@ -684,7 +684,7 @@
     "title": "Add Super Cucumber to new pond",
     "season": "Winter",
     "day": "1",
-    "completed": true,
+    "completed": false,
     "subtasks": []
   },
   {
