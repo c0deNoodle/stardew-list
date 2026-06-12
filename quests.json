@@ -45,14 +45,6 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "Crystal puzzle",
-        "done": false
-      },
-      {
-        "text": "Volcano slingshot",
-        "done": false
-      },
-      {
         "text": "Garlic for toad",
         "done": false
       }
