@@ -188,7 +188,7 @@
     "title": "[Bday] Krobus",
     "season": "Winter",
     "day": "1",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Diamond, Iridium Bar, Pumpkin, Void Egg, Void Mayonnaise, Wild Horseradish",
