@@ -175,7 +175,7 @@
     "title": "[Bday] Linus",
     "season": "Winter",
     "day": "3",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Blueberry Tart, Cactus Fruit, Coconut, Dish O' The Sea, Yams",
