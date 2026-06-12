@@ -642,7 +642,7 @@
     "title": "[Bday] Sebastian",
     "season": "Winter",
     "day": "10",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
