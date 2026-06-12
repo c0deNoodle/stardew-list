@@ -655,7 +655,7 @@
     "title": "[Bday] Caroline",
     "season": "Winter",
     "day": "7",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
