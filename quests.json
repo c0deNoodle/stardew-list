@@ -572,7 +572,7 @@
     "title": "[Bday] Clint",
     "season": "Winter",
     "day": "26",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Artichoke Dip, Aquamarine, Emerald, Fiddlehead Risotto, Gold Bar, Iridium Bar, Jade, Omni Geode, Ruby, Topaz",
@@ -585,7 +585,7 @@
     "title": "[Bday] Leah",
     "season": "Winter",
     "day": "23",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
@@ -598,7 +598,7 @@
     "title": "[Bday] Maru",
     "season": "Summer",
     "day": "10",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
@@ -611,7 +611,7 @@
     "title": "[Bday] Evelyn",
     "season": "Winter",
     "day": "20",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Beets, Chocolate Cake, Diamond, Fairy Rose, Stuffing, Tulip",
@@ -624,7 +624,7 @@
     "title": "[Bday] Wizard",
     "season": "Winter",
     "day": "17",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
@@ -637,7 +637,7 @@
     "title": "[Bday] Harvey",
     "season": "Winter",
     "day": "14",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Coffee, Pickles (any vegetable), Prismatic Shard, Rabbit's Foot, Super Meal, Truffle Oil, Wine (Blackberry, Coconut, Grape, Hot Pepper, Rhubarb, Strawberry)",
@@ -650,7 +650,7 @@
     "title": "[Bday] Sebastian",
     "season": "Winter",
     "day": "10",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Frog Egg, Frozen Tear, Obsidian, Sashimi, Void Egg, Pumpkin Soup",
@@ -663,7 +663,7 @@
     "title": "[Bday] Caroline",
     "season": "Winter",
     "day": "7",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fish Taco, Prismatic Shard, Summer Spangle, Green Tea",
