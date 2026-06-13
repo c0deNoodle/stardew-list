@@ -34,6 +34,10 @@
       {
         "text": "Pick up hoe",
         "done": false
+      },
+      {
+        "text": "",
+        "done": false
       }
     ]
   },
