@@ -127,7 +127,7 @@
     "title": "[Bday] Wizard",
     "season": "Winter",
     "day": "17",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Purple Mushroom, Rabbit's Foot, Solar Essence, Void Essence",
