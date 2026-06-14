@@ -621,7 +621,7 @@
     "title": "[Bday] Kent",
     "season": "Spring",
     "day": "4",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
