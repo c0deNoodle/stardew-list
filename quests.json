@@ -101,7 +101,7 @@
     "title": "[Bday] Leah",
     "season": "Winter",
     "day": "23",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Goat Cheese, Poppyseed Muffin, Salad, Stir Fry, Truffle, Vegetable Medley, Wine",
