@@ -59,7 +59,7 @@
     "title": "Joja missing bundle",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Wine (silver)",
