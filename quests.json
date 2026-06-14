@@ -428,7 +428,7 @@
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
