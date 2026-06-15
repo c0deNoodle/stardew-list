@@ -33,7 +33,7 @@
       },
       {
         "text": "Crack geodes",
-        "done": false
+        "done": true
       },
       {
         "text": "Build silos",
@@ -42,19 +42,6 @@
       {
         "text": "Crystalarium farm",
         "done": false
-      }
-    ]
-  },
-  {
-    "id": "1780192670454",
-    "title": "Collect gold walnuts on Ginger Island",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Garlic for toad",
-        "done": true
       }
     ]
   },
@@ -159,6 +146,19 @@
       {
         "text": "Fiddlehead Risotto, Rabbit's Foot, Roasted Hazelnuts",
         "done": false
+      }
+    ]
+  },
+  {
+    "id": "1780192670454",
+    "title": "Collect gold walnuts on Ginger Island",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Garlic for toad",
+        "done": true
       }
     ]
   },
