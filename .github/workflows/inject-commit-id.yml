@@ -20,12 +20,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # This step finds "VERSION-PLACEHOLDER" in index.html and replaces it with the actual Commit SHA
+      # Only inject if index.html was modified
       - name: Inject Commit ID into index.html
+        if: contains(github.event.head_commit.modified, 'index.html')
         run: |
-          echo "Current Commit SHA: ${{ github.sha }}"
+          echo "index.html changed. Injecting commit SHA."
           sed -i "s/content=\"VERSION-PLACEHOLDER\"/content=\"${{ github.sha }}\"/" index.html
-          
+      
+      # Always deploy regardless of which file changed
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
