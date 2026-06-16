@@ -17,6 +17,19 @@
     ]
   },
   {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1780868757795",
     "title": "Next time",
     "season": "",
@@ -33,19 +46,6 @@
       },
       {
         "text": "Crack geodes",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
