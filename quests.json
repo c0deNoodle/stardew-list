@@ -38,6 +38,19 @@
     ]
   },
   {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000008",
     "title": "[Bday] Emily",
     "season": "Spring",
@@ -59,19 +72,6 @@
     "subtasks": [
       {
         "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
