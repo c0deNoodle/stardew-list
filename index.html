@@ -358,7 +358,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         // --- CONFIGURATION ---
         const OWNER = 'c0deNoodle';           // Github username
         const REPO = 'stardew-list';          // Repo name
@@ -406,6 +406,9 @@
         let authToken = localStorage.getItem('gh_token');
         let isAdmin = !!authToken;
         let sortableActive = null;
+        
+        // NEW: Track the SHA of the version currently in memory to detect conflicts
+        let currentSha = null; 
         let saveTimeout = null;
 
         // --- STATUS INDICATOR LOGIC ---
@@ -421,15 +424,15 @@
             } else if (state === 'saving') {
                 statusMsg.style.display = 'none';
                 autosaveStatus.style.display = 'inline-block';
-                autosaveStatus.innerText = "💾 Saving to GitHub...";
+                autosaveStatus.innerText = "💾 Syncing...";
                 autosaveStatus.className = "autosave-status saving";
             } else if (state === 'complete') {
                 statusMsg.style.display = 'none';
                 autosaveStatus.style.display = 'inline-block';
-                autosaveStatus.innerText = "💾 Autosave complete";
+                autosaveStatus.innerText = "💾 Saved";
                 autosaveStatus.className = "autosave-status complete";
                 setTimeout(() => {
-                    if(autosaveStatus.innerText.includes("complete")) {
+                    if(autosaveStatus.innerText.includes("Saved")) {
                         setStatus('idle');
                     }
                 }, 2000);
@@ -446,16 +449,67 @@
             }
         }
 
+        // --- MERGE LOGIC (Conflict Resolution) ---
+        /**
+         * Merges 'myChanges' (currentData) into 'serverData' (latest from GitHub).
+         * It preserves server data structure but injects new IDs or updates fields 
+         * where local changes exist.
+         */
+        function mergeData(serverData, myData) {
+            // Create a map of server data for quick lookup
+            const serverMap = new Map();
+            serverData.forEach(item => serverMap.set(item.id, item));
+
+            let merged = [...serverData];
+
+            myData.forEach(myItem => {
+                if (!serverMap.has(myItem.id)) {
+                    // This is a completely new item added locally
+                    // Add to the beginning to maintain "newest first" feel
+                    merged.unshift(myItem);
+                } else {
+                    // Item exists on server AND locally.
+                    // Check if the local version has meaningful changes
+                    const serverItem = serverMap.get(myItem.id);
+                    
+                    // Simple comparison of critical fields
+                    const localTitle = myItem.title;
+                    const serverTitle = serverItem.title;
+                    const localCompleted = myItem.completed;
+                    const serverCompleted = serverItem.completed;
+                    
+                    // Compare subtasks deeply
+                    const localSubs = JSON.stringify(myItem.subtasks.sort((a,b)=>a.text.localeCompare(b.text)));
+                    const serverSubs = JSON.stringify(serverItem.subtasks.sort((a,b)=>a.text.localeCompare(b.text)));
+
+                    let changed = false;
+                    if (localTitle !== serverTitle) changed = true;
+                    if (localCompleted !== serverCompleted) changed = true;
+                    if (localSubs !== serverSubs) changed = true;
+
+                    if (changed) {
+                        // Apply local changes to the server item
+                        // This assumes the user's intent (local data) takes precedence for specific fields
+                        serverItem.title = myItem.title;
+                        serverItem.completed = myItem.completed;
+                        serverItem.subtasks = myItem.subtasks;
+                    }
+                }
+            });
+
+            return merged;
+        }
+
         // --- AUTOSAVE LOGIC ---
-        function triggerAutosave() {
+        async function triggerAutosave() {
             if (!isAdmin) return;
             
             if (saveTimeout) clearTimeout(saveTimeout);
-            setStatus('saving');
-
+            
+            // Debounce to prevent excessive API calls during rapid typing/dragging
             saveTimeout = setTimeout(async () => {
-                await saveData();
-            }, 1000);
+                await safeSaveData();
+            }, 800);
         }
 
         // --- DATA FETCHING ---
@@ -467,11 +521,15 @@
                 const headers = {};
                 if (authToken) headers['Authorization'] = `token ${authToken}`;
 
-                const response = await fetch(url, { headers });
+                const response = await fetch(url, { 
+                    headers,
+                    cache: 'no-store' // CRITICAL: Bypass browser cache
+                });
                 
                 if (!response.ok) {
                     if (response.status === 404) {
                         currentData = [];
+                        currentSha = null;
                         render();
                         setStatus('idle');
                         return;
@@ -482,6 +540,7 @@
                 const json = await response.json();
                 const content = atob(json.content);
                 currentData = JSON.parse(content);
+                currentSha = json.sha; // Store the SHA
                 
                 render();
                 setStatus('idle');
@@ -491,45 +550,112 @@
             }
         }
 
-        // --- SAVING DATA ---
-        async function saveData() {
+        // --- SAVING DATA WITH CONFLICT RESOLUTION ---
+        async function safeSaveData(maxRetries = 3) {
             if (!authToken) return;
+            
+            setStatus('saving');
 
-            try {
-                const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                const headers = { 'Authorization': `token ${authToken}` };
-                const getRes = await fetch(getUrl, { headers });
-                
-                if (!getRes.ok) {
-                    const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                    const putBody = {
-                        message: "Create quest log",
-                        content: newContent,
-                        branch: BRANCH
+            let attempts = 0;
+            
+            while (attempts < maxRetries) {
+                attempts++;
+                try {
+                    // 1. GET THE LATEST VERSION FROM SERVER
+                    const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const headers = { 
+                        'Authorization': `token ${authToken}`,
+                        'Content-Type': 'application/json'
                     };
-                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                } else {
+                    
+                    const getRes = await fetch(getUrl, { 
+                        headers, 
+                        cache: 'no-store' // CRITICAL: Get fresh data every time
+                    });
+
+                    if (!getRes.ok) {
+                        // If file doesn't exist yet (first ever create), treat as 404
+                        if (getRes.status === 404) {
+                            const newContent = btoa(JSON.stringify(currentData, null, 2));
+                            const putUrl = getUrl;
+                            const putBody = {
+                                message: "Create quest log",
+                                content: newContent,
+                                branch: BRANCH
+                            };
+                            await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                            
+                            // Update state after success
+                            setStatus('complete');
+                            return;
+                        }
+                        throw new Error(`Get failed: ${getRes.status}`);
+                    }
+
                     const fileInfo = await getRes.json();
+                    const serverSha = fileInfo.sha;
+                    const serverContent = atob(fileInfo.content);
+                    let serverData = JSON.parse(serverContent);
+
+                    // 2. CHECK FOR CONFLICT
+                    if (serverSha !== currentSha) {
+                        console.log(`Conflict detected! Local SHA: ${currentSha}, Server SHA: ${serverSha}. Attempting merge...`);
+                        
+                        // Merge local changes into the latest server data
+                        currentData = mergeData(serverData, currentData);
+                        
+                        // Update our local pointer to match the server state we just merged with
+                        currentSha = serverSha;
+                    }
+
+                    // 3. PREPARE TO SAVE
                     const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    const putUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                    const putUrl = getUrl;
+                    
                     const putBody = {
-                        message: "Update quest log",
+                        message: "Update quest log via webapp",
                         content: newContent,
-                        sha: fileInfo.sha,
+                        sha: currentSha, // Use the (possibly updated) SHA
                         branch: BRANCH
                     };
-                    await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                }
 
-                setStatus('complete');
-            } catch (e) {
-                console.error(e);
-                setStatus('error', "Save failed: " + e.message);
+                    // 4. ATTEMPT WRITE
+                    const putRes = await fetch(putUrl, {
+                        method: 'PUT',
+                        headers: headers,
+                        body: JSON.stringify(putBody)
+                    });
+
+                    if (!putRes.ok) {
+                        const errJson = await putRes.json().catch(() => ({}));
+                        // If error is about SHA mismatch (race condition happened again), retry
+                        if (errJson.message && (errJson.message.includes("SHA") || errJson.message.includes("Base64"))) {
+                            continue; 
+                        }
+                        throw new Error("Save failed: " + putRes.statusText);
+                    }
+
+                    // Success! Update local SHA from response
+                    const putJson = await putRes.json();
+                    currentSha = putJson.content.sha;
+                    
+                    setStatus('complete');
+                    return; // Exit loop on success
+
+                } catch (e) {
+                    console.error(`Save attempt ${attempts} failed:`, e);
+                    // If we hit max retries, stop
+                    if (attempts >= maxRetries) {
+                        setStatus('error', "Sync failed due to network or persistent conflicts. Please refresh.");
+                        return;
+                    }
+                    // Wait briefly before retrying
+                    await new Promise(r => setTimeout(r, 500));
+                }
             }
         }
 
-        // --- Inject NPC Icons (prepend name) ---
+        // --- Inject NPC Icons ---
         function injectNPCIcons(text) {
             if (!text) return "";
             
@@ -539,11 +665,6 @@
             for (const [name, filename] of Object.entries(NPC_ICONS)) {
                 // Match the whole word, case insensitive
                 const regex = new RegExp(`\\b${name}\\b`, 'gi');
-                
-                // Replace "Name" with "Icon Name"
-                // Note: We use the variable 'name' to ensure we keep the original casing of the name in the text
-                // Actually, regex 'gi' captures the case in the text. 
-                // To be safe and preserve the exact text casing (e.g. "sam" vs "Sam"), we can use a function:
                 
                 processedText = processedText.replace(regex, (match) => {
                     return `<img src="IMAGES/NPCs/${filename}" alt="${name}" style="height: 1em; vertical-align: middle; margin-right: 2px; margin-left: 2px; border-radius: 50%;">${match}`;
@@ -568,7 +689,6 @@
                 const li = document.createElement('li');
                 li.className = 'quest-item';
                 
-                // Logic Change: Main task completion is independent of subtasks
                 const shouldCheck = task.completed;
 
                 li.innerHTML = `
@@ -579,13 +699,11 @@
                             onchange="toggleTaskById('${task.id}')">
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                // EDIT MODE: Show Icons, but make editable
                                 `<div class="editable-title" 
                                     contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${injectNPCIcons(task.title)}</div>` : 
-                                // VIEW MODE: Inject Icons
                                 `<span class="quest-text">${injectNPCIcons(task.title)}</span>`
                             }
                         </div>
@@ -635,9 +753,7 @@
                 div.innerHTML = `
                     <input type="checkbox" ${st.done ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleSubtaskById('${taskId}', ${stIndex})">
                     ${isAdmin ? 
-                        // EDIT MODE: Show Icons, but make editable
                         `<div class="subtask-input" contenteditable="true" onblur="updateSubtextById('${taskId}', ${stIndex}, this.innerText)">${injectNPCIcons(st.text)}</div>` : 
-                        // VIEW MODE: Inject Icons into the span
                         `<span class="subtask-input">${injectNPCIcons(st.text)}</span>`
                     }
                     ${isAdmin ? `<button class="subtask-delete-btn" onclick="deleteSubtaskById('${taskId}', ${stIndex})">x</button>` : ''}
@@ -654,7 +770,7 @@
 
         // --- Handle Title Blur (Deletion Logic) ---
         function handleTitleBlur(element, taskId) {
-            const newText = element.innerText.trim(); // .innerText automatically strips the <img> tags
+            const newText = element.innerText.trim();
             const originalText = element.dataset.originalText || "";
 
             if (newText === "") {
@@ -672,7 +788,7 @@
                 if (newText !== originalText) {
                     const index = currentData.findIndex(t => t.id === taskId);
                     if (index !== -1) {
-                        currentData[index].title = newText; // Saves plain text
+                        currentData[index].title = newText;
                         triggerAutosave();
                     }
                 }
@@ -701,7 +817,6 @@
             triggerAutosave();
         }
 
-        // NEW: Toggle by ID
         function toggleTaskById(taskId) {
             const task = currentData.find(t => t.id === taskId);
             if (task) {
@@ -711,7 +826,6 @@
             }
         }
 
-        // NEW: Restore by ID
         function restoreTaskById(taskId) {
             const task = currentData.find(t => t.id === taskId);
             if (task) {
@@ -732,21 +846,19 @@
             }
         }
 
-        // NEW: Add Subtask by ID
         function addSubtaskById(taskId) {
             const task = currentData.find(t => t.id === taskId);
             if (task) {
                 task.subtasks.push({ text: "", done: false });
                 render();
                 setTimeout(() => {
-                    const inputs = document.querySelectorAll(`#subtasks-${taskId} input[type="text"]`);
+                    const inputs = document.querySelectorAll(`#subtasks-${taskId} input[type="text"], #subtasks-${taskId} .subtask-input`);
                     if(inputs.length > 0) inputs[inputs.length - 1].focus();
                 }, 50);
                 triggerAutosave();
             }
         }
 
-        // NEW: Toggle Subtask by ID
         function toggleSubtaskById(taskId, subIndex) {
             const task = currentData.find(t => t.id === taskId);
             if (task && task.subtasks[subIndex]) {
@@ -756,7 +868,6 @@
             }
         }
 
-        // NEW: Update Subtext by ID
         function updateSubtextById(taskId, subIndex, val) {
             const task = currentData.find(t => t.id === taskId);
             if (task && task.subtasks[subIndex]) {
@@ -765,7 +876,6 @@
             }
         }
 
-        // NEW: Delete Subtask by ID
         function deleteSubtaskById(taskId, subIndex) {
             const task = currentData.find(t => t.id === taskId);
             if (task) {
@@ -784,13 +894,11 @@
                 onEnd: function(evt) {
                     // Re-sort the main array based on new visual order
                     const newOrderIds = Array.from(document.getElementById('activeList').children).map(li => {
-                        // Extract ID from the checkbox onchange handler string
                         const handler = li.querySelector('input[type="checkbox"]').getAttribute('onchange');
                         const match = handler.match(/'([^']+)'/);
                         return match ? match[1] : null;
                     }).filter(id => id);
 
-                    // Rebuild currentData active tasks based on new order
                     const activeTasks = currentData.filter(t => !t.completed);
                     const newActiveTasks = [];
                     newOrderIds.forEach(id => {
@@ -798,7 +906,6 @@
                         if (task) newActiveTasks.push(task);
                     });
 
-                    // Reconstruct currentData: [new active tasks] + [completed tasks]
                     const completedTasks = currentData.filter(t => t.completed);
                     currentData = [...newActiveTasks, ...completedTasks];
                     
@@ -812,12 +919,11 @@
         async function fetchPageStatus() {
             const statusSpan = document.getElementById('pageStatus');
             
-            statusSpan.style.display = 'inline'; // Make sure it's visible
+            statusSpan.style.display = 'inline';
             statusSpan.innerText = "Checking...";
             statusSpan.className = "";
             
             try {
-                // 1. Fetch the LATEST commit on the main branch (Repository HEAD)
                 const latestCommitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
@@ -830,7 +936,6 @@
                 const latestData = await latestRes.json();
                 const latestSha = latestData[0].sha.substring(0, 7);
 
-                // 2. Fetch the GITHUB PAGES DEPLOYMENTS
                 const deploymentsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/pages/deployments?per_page=1&_t=${Date.now()}`;
                 const deployRes = await fetch(deploymentsUrl, { headers, cache: 'no-store' });
                 
@@ -838,32 +943,26 @@
 
                 if (deployRes.ok) {
                     const deployments = await deployRes.json();
-                    // Find the most recent SUCCESSFUL deployment
                     const successDeploy = deployments.find(d => d.state === 'success');
                     
                     if (successDeploy) {
                         liveSha = successDeploy.sha.substring(0, 7);
                     } else {
-                        // No successful deployment yet
                         liveSha = latestSha; 
                     }
                 } else {
-                    // API failure (e.g., token scope issue)
                     console.warn("Could not fetch deployment status. Assuming latest is live.");
                     liveSha = latestSha;
                 }
-                // 3. Compare and Format
+                
                 if (liveSha === latestSha) {
-                    // MATCH: Updated
                     statusSpan.innerText = `Updated ✔ (Current: ${liveSha})`;
-                    statusSpan.style.color = 'var(--success)'; // Green
+                    statusSpan.style.color = 'var(--success)';
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
-                    // MISMATCH: Pending
                     statusSpan.innerText = `⚠️ Pending (${liveSha} -> ${latestSha})`;
-                    statusSpan.style.color = 'var(--danger)'; // Red
+                    statusSpan.style.color = 'var(--danger)';
                     
-                    // Show the banner
                     const banner = document.getElementById('updateBanner');
                     banner.style.display = 'block';
                     banner.innerHTML = `⚠️ New commit detected. GitHub Pages is deploying. <br>Please refresh in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
