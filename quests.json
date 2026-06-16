@@ -64,6 +64,19 @@
     ]
   },
   {
+    "id": "1000000000006",
+    "title": "[Bday] Shane",
+    "season": "Spring",
+    "day": "20",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000008",
     "title": "[Bday] Emily",
     "season": "Spring",
@@ -85,19 +98,6 @@
     "subtasks": [
       {
         "text": "Fried Calamari, Rabbit's Foot, Prismatic Shard",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000006",
-    "title": "[Bday] Shane",
-    "season": "Spring",
-    "day": "20",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
         "done": false
       }
     ]
