@@ -111,7 +111,7 @@
     "title": "[Bday] Vincent",
     "season": "Spring",
     "day": "10",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Cranberry Candy, Pink Cake, Grape, Snail",
