@@ -412,8 +412,10 @@
         const SEASON_ORDER = { "Spring": 1, "Summer": 2, "Fall": 3, "Winter": 4 };
 
         function updateUIState() {
+            const metaTag = document.querySelector('meta[name="app-commit-id"]');
+            
             if (isAdmin) {
-                // Admin Mode
+                // Admin Mode - Show Refresh and Status Badge
                 refreshBtn.style.display = 'inline-block';
                 loginBtn.style.display = 'none';
                 pageStatus.style.display = 'inline-block';
@@ -422,11 +424,19 @@
                 // Enable inputs
                 questListInputs.forEach(el => el.disabled = false);
                 
-                // Initialize sortable
-                // (Render will handle initSortable if list exists)
+                // Set initial status text based on meta tag
+                if (metaTag) {
+                    const localCommit = metaTag.getAttribute('content') || 'UNKNOWN';
+                    pageStatus.innerText = `Updated ✔ (Current: ${localCommit.substring(0, 7)})`;
+                    pageStatus.style.color = 'var(--success)';
+                } else {
+                    pageStatus.innerText = "Unknown Version";
+                    pageStatus.style.color = '#888';
+                }
+                
                 setStatus('idle');
             } else {
-                // Guest Mode
+                // Guest Mode - Hide Edit Controls
                 refreshBtn.style.display = 'none';
                 loginBtn.style.display = 'inline-block';
                 pageStatus.style.display = 'none';
@@ -549,9 +559,10 @@
         async function fetchData() {
             setStatus('loading', "Loading...");
             try {
-                const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+                // Query param used for cache busting to prevent aggressive browser caching
+                const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?_t=${Date.now()}`;
                 const headers = authToken ? { 'Authorization': `token ${authToken}` } : {};
-                const response = await fetch(url, { headers, cache: 'no-store' });
+                const response = await fetch(url, { headers });
                 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -936,20 +947,6 @@
                 fetchData();
             } else {
                 alert("Invalid token format. Must contain 'pat_' (e.g., github_pat_...)");
-            }
-        }
-
-        function updateUIState() {
-            const adminPanel = document.getElementById('adminPanel');
-            const loginBtn = document.getElementById('loginBtn');
-            if (isAdmin) {
-                adminPanel.classList.add('active');
-                loginBtn.style.display = 'none';
-                setStatus('idle');
-            } else {
-                adminPanel.classList.remove('active');
-                loginBtn.style.display = 'inline-block';
-                setStatus('idle');
             }
         }
 
