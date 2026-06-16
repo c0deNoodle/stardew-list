@@ -167,7 +167,6 @@
             font-size: 0.9rem;
         }
 
-        /* Lines 215-222 */
         .subtask-input {
             flex-grow: 1;
             border: none;
@@ -176,16 +175,13 @@
             font-family: inherit;
             font-size: 0.9rem;
             outline: none;
-            /* Ensure it acts like a block for wrapping when focused */
             display: inline-block; 
             min-width: 100px;
         }
         .subtask-input:focus {
             border-bottom: 1px solid var(--border);
-            /* Allow wrapping */
             white-space: normal; 
             word-wrap: break-word;
-            /* Ensure it expands vertically */
             height: auto; 
             line-height: 1.4;
             padding: 2px 0;
@@ -270,16 +266,6 @@
             border: 2px solid var(--border);
             padding: 8px;
         }
-
-        /* Status Indicator Styles */
-        .status-updated {
-            color: var(--success);
-            font-weight: bold;
-        }
-        .status-pending {
-            color: var(--danger);
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -295,9 +281,7 @@
             <span id="autosaveStatus" class="autosave-status idle">💾 Autosave on</span>
         </div>
 
-        <div id="updateBanner" class="update-banner">
-            <!-- Content injected by JS -->
-        </div>
+        <div id="updateBanner" class="update-banner"></div>
 
         <div id="adminPanel" class="admin-panel">
             <h3>✏️ Editor Mode Active</h3>
@@ -316,7 +300,7 @@
         </div>
 
         <div class="controls">
-            <button class="refresh-btn" onclick="fetchData()">🔄 Refresh</button>
+            <button class="refresh-btn" onclick="handleRefresh()">🔄 Refresh</button>
             <button class="login-btn" id="loginBtn" onclick="showLogin()">🔑 Login to Edit</button>
             <div id="pageStatus" style="margin-left: 10px; font-size: 0.75rem; color: #888; display: none;">
                 Checking...
@@ -333,7 +317,6 @@
             <ul id="completedList" class="quest-list"></ul>
         </div>
 
-        <!-- Footer -->
         <footer style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: #888; line-height: 1.6;">
             <div style="margin-top: 10px;">
                 <span id="disclaimer">
@@ -360,12 +343,12 @@
 
 <script>
         // --- CONFIGURATION ---
-        const OWNER = 'c0deNoodle';           // Github username
-        const REPO = 'stardew-list';          // Repo name
-        const FILE_PATH = 'quests.json';      // The quest data file
-        const BRANCH = 'main';                // The branch reference
+        const OWNER = 'c0deNoodle';
+        const REPO = 'stardew-list';
+        const FILE_PATH = 'quests.json';
+        const BRANCH = 'main';
 
-        const NPC_ICONS = {                   // Icons for quest NPCs
+        const NPC_ICONS = {
             "Abigail": "Abigail_Icon.png",
             "Alex": "Alex_Icon.png",
             "Caroline": "Caroline_Icon.png",
@@ -406,14 +389,11 @@
         let authToken = localStorage.getItem('gh_token');
         let isAdmin = !!authToken;
         let sortableActive = null;
-        
-        // Track commit IDs for quests.json and index.html
         let lastQuestCommitID = localStorage.getItem('lumo_quest_commit_id') || null;
         let lastAppCommitID = localStorage.getItem('lumo_app_commit_id') || null;
-        
-        // Store a reference to the last synced state to help with merge logic if needed,
-        // although it primarily relies on ID-based merging from currentData vs Server.
         let saveTimeout = null;
+
+        const SEASON_ORDER = { "Spring": 1, "Summer": 2, "Fall": 3, "Winter": 4 };
 
         // --- STATUS INDICATOR LOGIC ---
         function setStatus(state, message = "") {
@@ -436,9 +416,7 @@
                 autosaveStatus.innerText = "💾 Saved";
                 autosaveStatus.className = "autosave-status complete";
                 setTimeout(() => {
-                    if(autosaveStatus.innerText.includes("Saved")) {
-                        setStatus('idle');
-                    }
+                    if(autosaveStatus.innerText.includes("Saved")) setStatus('idle');
                 }, 2000);
             } else if (state === 'error') {
                 statusMsg.style.display = 'inline-block';
@@ -453,82 +431,26 @@
             }
         }
 
-        // --- MERGE LOGIC (Conflict Resolution) ---
-        /**
-         * Merges 'myChanges' (currentData) into 'serverData' (latest from GitHub).
-         * It preserves server data structure but injects new IDs or updates fields 
-         * where local changes exist.
-         */
-        function mergeData(serverData, myData) {
-            // Create a map of server data for quick lookup
-            const serverMap = new Map();
-            serverData.forEach(item => serverMap.set(item.id, item));
-
-            let merged = [...serverData];
-
-            myData.forEach(myItem => {
-                if (!serverMap.has(myItem.id)) {
-                    // This is a completely new item added locally
-                    // Add to the beginning to maintain "newest first" feel
-                    merged.unshift(myItem);
-                } else {
-                    // Item exists on server AND locally.
-                    // Check if the local version has meaningful changes
-                    const serverItem = serverMap.get(myItem.id);
-                    
-                    // Simple comparison of critical fields
-                    const localTitle = myItem.title;
-                    const serverTitle = serverItem.title;
-                    const localCompleted = myItem.completed;
-                    const serverCompleted = serverItem.completed;
-                    
-                    // Compare subtasks deeply
-                    const localSubs = JSON.stringify(myItem.subtasks.sort((a,b)=>a.text.localeCompare(b.text)));
-                    const serverSubs = JSON.stringify(serverItem.subtasks.sort((a,b)=>a.text.localeCompare(b.text)));
-
-                    let changed = false;
-                    if (localTitle !== serverTitle) changed = true;
-                    if (localCompleted !== serverCompleted) changed = true;
-                    if (localSubs !== serverSubs) changed = true;
-
-                    if (changed) {
-                        // Apply local changes to the server item
-                        // This assumes the user's intent (local data) takes precedence for specific fields
-                        serverItem.title = myItem.title;
-                        serverItem.completed = myItem.completed;
-                        serverItem.subtasks = myItem.subtasks;
-                    }
-                }
-            });
-
-            return merged;
-        }
-
         // --- AUTOSAVE LOGIC ---
         async function triggerAutosave() {
             if (!isAdmin) return;
-            
             if (saveTimeout) clearTimeout(saveTimeout);
-            
-            // Debounce slightly
-            saveTimeout = setTimeout(async () => {
-                await safeSaveData();
-            }, 800);
+            saveTimeout = setTimeout(async () => await safeSaveData(), 800);
+        }
+
+        // Handle Refresh Button - sync data and check app version
+        async function handleRefresh() {
+            await safeSaveData();
+            await fetchPageStatus();
         }
 
         // --- DATA FETCHING ---
         async function fetchData() {
             setStatus('loading', "Loading...");
-
             try {
                 const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-                const headers = {};
-                if (authToken) headers['Authorization'] = `token ${authToken}`;
-
-                const response = await fetch(url, { 
-                    headers,
-                    cache: 'no-store' 
-                });
+                const headers = authToken ? { 'Authorization': `token ${authToken}` } : {};
+                const response = await fetch(url, { headers, cache: 'no-store' });
                 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -543,40 +465,26 @@
                 }
 
                 const json = await response.json();
-                const content = atob(json.content);
-                currentData = JSON.parse(content);
-                
-                // Store the COMMIT ID from GitHub's response
-                const serverCommitID = json.sha; 
-                lastQuestCommitID = serverCommitID;
+                currentData = JSON.parse(atob(json.content));
+                lastQuestCommitID = json.sha;
                 localStorage.setItem('lumo_quest_commit_id', lastQuestCommitID);
-                
                 render();
                 setStatus('idle');
-
-                // Trigger status check AFTER rendering data
-                setTimeout(fetchPageStatus, 200); 
-
             } catch (e) {
                 console.error(e);
                 setStatus('error', "Error loading data.");
             }
         }
 
-        // --- SAVING DATA WITH CONFLICT RESOLUTION ---
-        // --- SAVING DATA WITH COMMIT ID VALIDATION ---
-        // --- SAVING DATA WITH SMART MERGE LOGIC ---
+        // --- SAVING DATA WITH COMMIT ID VALIDATION AND MERGE ---
         async function safeSaveData(maxRetries = 3) {
             if (!authToken) return;
-            
             setStatus('saving');
-
-            let attempts = 0;
             
+            let attempts = 0;
             while (attempts < maxRetries) {
                 attempts++;
                 try {
-                    // 1. Fetch LATEST metadata BEFORE saving to check for conflicts
                     const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
                     const headers = { 
                         'Authorization': `token ${authToken}`,
@@ -584,22 +492,16 @@
                         'Cache-Control': 'no-cache, no-store, must-revalidate'
                     };
                     
-                    const getRes = await fetch(getUrl, { 
-                        headers, 
-                        cache: 'no-store' 
-                    });
+                    const getRes = await fetch(getUrl, { headers, cache: 'no-store' });
 
                     if (!getRes.ok) {
                         if (getRes.status === 404) {
-                            // First ever create case
                             const newContent = btoa(JSON.stringify(currentData, null, 2));
-                            const putBody = {
+                            await fetch(getUrl, { method: 'PUT', headers, body: JSON.stringify({
                                 message: "Create quest log",
                                 content: newContent,
                                 branch: BRANCH
-                            };
-                            await fetch(getUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                            // Success handled below
+                            })});
                             setStatus('complete');
                             return;
                         }
@@ -607,90 +509,57 @@
                     }
 
                     const fileInfo = await getRes.json();
-                    const serverCommitID = fileInfo.sha; 
+                    const serverCommitID = fileInfo.sha;
                     
-                    // 2. Check if server has changed since our last known state
+                    // Merge local changes with fresh server data if commit IDs differ
                     if (serverCommitID !== lastQuestCommitID) {
                         console.log(`Commit ID differs! Local: ${lastQuestCommitID}, Server: ${serverCommitID}. Merging changes...`);
                         
-                        // A. Fetch the fresh server content
-                        const serverContent = atob(fileInfo.content);
-                        const serverData = JSON.parse(serverContent);
-                        
-                        // B. Create a Map of server items for fast lookup
+                        const serverData = JSON.parse(atob(fileInfo.content));
                         const serverMap = new Map();
                         serverData.forEach(item => serverMap.set(item.id, item));
                         
-                        // C. Start with a copy of the fresh server data
                         let mergedData = [...serverData];
+                        const localIds = new Set();
                         
-                        // D. Apply LOCAL CHANGES (from currentData) onto the fresh data
                         currentData.forEach(localItem => {
+                            localIds.add(localItem.id);
                             if (!serverMap.has(localItem.id)) {
-                                // Item exists locally but not on server -> NEW ADDITION
-                                // Add it to the front or end? Let's add to front to match typical "newest first"
                                 mergedData.unshift(localItem);
                             } else {
-                                // Item exists in both. Check if local version is different (Edit).
-                                // Compare content to avoid overwriting if nothing changed, 
-                                // though simple overwrite of fields is usually safer for "apply my edit".
                                 const serverItem = serverMap.get(localItem.id);
-                                
-                                // Deep compare for safety (or just overwrite fields)
-                                // Strategy: Overwrite specific fields from localItem to serverItem
                                 serverItem.title = localItem.title;
                                 serverItem.completed = localItem.completed;
                                 serverItem.season = localItem.season;
                                 serverItem.day = localItem.day;
-                                serverItem.subtasks = JSON.parse(JSON.stringify(localItem.subtasks)); // Deep copy subtasks
+                                serverItem.subtasks = JSON.parse(JSON.stringify(localItem.subtasks));
                             }
                         });
 
-                        // Explicitly filter out items from serverData that are missing in currentData.
-                        
-                        const localIds = new Set(currentData.map(i => i.id));
                         mergedData = mergedData.filter(item => localIds.has(item.id));
-
-                        // F. Update currentData to this merged result
                         currentData = mergedData;
-                        
-                        // G. Update local commit tracker to match the server base just merged with
                         lastQuestCommitID = serverCommitID;
                     }
 
-                    // 3. Prepare and push the now-merged data
-                    const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    
                     const putBody = {
                         message: "Update quest log via webapp",
-                        content: newContent,
-                        sha: serverCommitID, // Use the latest commit ID fetched
+                        content: btoa(JSON.stringify(currentData, null, 2)),
+                        sha: serverCommitID,
                         branch: BRANCH
                     };
 
-                    const putRes = await fetch(getUrl, {
-                        method: 'PUT',
-                        headers: headers,
-                        body: JSON.stringify(putBody)
-                    });
+                    const putRes = await fetch(getUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
 
                     if (!putRes.ok) {
                         const errJson = await putRes.json().catch(() => ({}));
-                        if (errJson.message && (errJson.message.includes("SHA") || errJson.message.includes("Base64"))) {
-                            // Race condition: someone else saved again while processing. Retry.
-                            continue; 
-                        }
+                        if (errJson.message && (errJson.message.includes("SHA") || errJson.message.includes("Base64"))) continue;
                         throw new Error("Save failed: " + putRes.statusText);
                     }
 
-                    // 4. Success! Update local commit ID tracker
                     const putJson = await putRes.json();
                     lastQuestCommitID = putJson.content.sha;
                     localStorage.setItem('lumo_quest_commit_id', lastQuestCommitID);
-                    
-                    // Re-render to show the final state
                     render();
-                    
                     setStatus('complete');
                     return;
 
@@ -705,94 +574,54 @@
             }
         }
 
-        // --- Inject NPC Icons ---
+        // --- NPC ICON INJECTION ---
         function injectNPCIcons(text) {
             if (!text) return "";
-            
             let processedText = text;
-            
-            // Iterate through NPC map
             for (const [name, filename] of Object.entries(NPC_ICONS)) {
-                // Match the whole word, case insensitive
                 const regex = new RegExp(`\\b${name}\\b`, 'gi');
-                
-                processedText = processedText.replace(regex, (match) => {
-                    return `<img src="IMAGES/NPCs/${filename}" alt="${name}" style="height: 1em; vertical-align: middle; margin-right: 2px; margin-left: 2px; border-radius: 50%;">${match}`;
-                });
+                processedText = processedText.replace(regex, (match) => 
+                    `<img src="IMAGES/NPCs/${filename}" alt="${name}" style="height: 1em; vertical-align: middle; margin-right: 2px; margin-left: 2px; border-radius: 50%;">${match}`
+                );
             }
-            
             return processedText;
         }
 
-        // --- UI LOGIC ---
-        
-        // Define the order of seasons for sorting
-        const SEASON_ORDER = {
-            "Spring": 1,
-            "Summer": 2,
-            "Fall": 3,
-            "Winter": 4
-        };
-
+        // --- UI RENDERING ---
         function render() {
             const activeList = document.getElementById('activeList');
             const completedList = document.getElementById('completedList');
-            
             activeList.innerHTML = '';
             completedList.innerHTML = '';
 
-            const activeTasks = currentData.filter(t => !t.completed);
+            let activeTasks = currentData.filter(t => !t.completed);
             const completedTasks = currentData.filter(t => t.completed);
 
-            // *** SORTING LOGIC FOR ACTIVE TASKS ***
+            // Sort active tasks: undated first, then by season (ascending), then by day (ascending)
             activeTasks.sort((a, b) => {
-                const hasDateA = (a.season && a.day) ? true : false;
-                const hasDateB = (b.season && b.day) ? true : false;
-
-                // Rule 1: Items without a date come FIRST
+                const hasDateA = a.season && a.day;
+                const hasDateB = b.season && b.day;
                 if (!hasDateA && hasDateB) return -1;
                 if (hasDateA && !hasDateB) return 1;
-                
-                // If both have no date, or both have dates, continue to secondary checks
-                // If neither has a date, maintain relative order (stable sort) or maybe by creation time? 
-                // For now, let's keep them as they are if both undated.
-                if (!hasDateA && !hasDateB) return 0; 
-
-                // Both have dates. Now compare Season -> Day
-                
-                // Get season numbers (default to high number if missing, though check above ensures they exist)
+                if (!hasDateA && !hasDateB) return 0;
                 const seasonA = SEASON_ORDER[a.season] || 99;
                 const seasonB = SEASON_ORDER[b.season] || 99;
-
-                // Compare Seasons first
-                if (seasonA !== seasonB) {
-                    return seasonA - seasonB; // Spring (1) < Summer (2)
-                }
-
-                // If seasons are equal, compare Days
-                const dayA = parseInt(a.day) || 0;
-                const dayB = parseInt(b.day) || 0;
-
-                return dayA - dayB; // Ascending order (Day 1 < Day 14)
+                if (seasonA !== seasonB) return seasonA - seasonB;
+                return parseInt(a.day || 0) - parseInt(b.day || 0);
             });
-            // *** END SORTING LOGIC ***
 
             activeTasks.forEach((task) => {
                 const li = document.createElement('li');
                 li.className = 'quest-item';
-                
-                const shouldCheck = task.completed;
-
                 li.innerHTML = `
                     <div class="quest-header">
                         <input type="checkbox" class="quest-checkbox" 
-                            ${shouldCheck ? 'checked' : ''} 
+                            ${task.completed ? 'checked' : ''} 
                             ${isAdmin ? '' : 'disabled'}
                             onchange="toggleTaskById('${task.id}')">
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" 
-                                    contenteditable="true" 
+                                `<div class="editable-title" contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${injectNPCIcons(task.title)}</div>` : 
@@ -817,8 +646,7 @@
                         <input type="checkbox" disabled checked>
                         <div class="editable-title-wrapper">
                             ${isAdmin ? 
-                                `<div class="editable-title" 
-                                    contenteditable="true" 
+                                `<div class="editable-title" contenteditable="true" 
                                     onfocus="this.dataset.originalText = this.innerText" 
                                     onblur="handleTitleBlur(this, '${task.id}')"
                                     onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${injectNPCIcons(task.title)}</div>` : 
@@ -838,7 +666,6 @@
         function renderSubtasksById(taskId, subtasks) {
             const container = document.getElementById(`subtasks-${taskId}`);
             if(!container) return;
-            
             subtasks.forEach((st, stIndex) => {
                 const div = document.createElement('div');
                 div.className = 'subtask-item';
@@ -854,13 +681,7 @@
             });
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // --- Handle Title Blur (Deletion Logic) ---
+        // --- TITLE BLUR HANDLER ---
         function handleTitleBlur(element, taskId) {
             const newText = element.innerText.trim();
             const originalText = element.dataset.originalText || "";
@@ -876,23 +697,20 @@
                 } else {
                     element.innerText = originalText;
                 }
-            } else {
-                if (newText !== originalText) {
-                    const index = currentData.findIndex(t => t.id === taskId);
-                    if (index !== -1) {
-                        currentData[index].title = newText;
-                        triggerAutosave();
-                    }
+            } else if (newText !== originalText) {
+                const index = currentData.findIndex(t => t.id === taskId);
+                if (index !== -1) {
+                    currentData[index].title = newText;
+                    triggerAutosave();
                 }
             }
         }
 
-        // --- ACTIONS (ID Based) ---
+        // --- QUEST ACTIONS ---
         function addTask() {
             const title = document.getElementById('newTaskInput').value;
             const season = document.getElementById('seasonSelect').value;
             const day = document.getElementById('dayInput').value;
-
             if (!title) return alert("Enter a quest name!");
 
             currentData.unshift({
@@ -903,7 +721,6 @@
                 completed: false,
                 subtasks: []
             });
-            
             document.getElementById('newTaskInput').value = '';
             render();
             triggerAutosave();
@@ -911,31 +728,12 @@
 
         function toggleTaskById(taskId) {
             const task = currentData.find(t => t.id === taskId);
-            if (task) {
-                task.completed = !task.completed;
-                render();
-                triggerAutosave();
-            }
+            if (task) { task.completed = !task.completed; render(); triggerAutosave(); }
         }
 
         function restoreTaskById(taskId) {
             const task = currentData.find(t => t.id === taskId);
-            if (task) {
-                task.completed = false;
-                render();
-                triggerAutosave();
-            }
-        }
-
-        function deleteTask(taskId) {
-            if(confirm("Delete this quest?")) {
-                const index = currentData.findIndex(t => t.id === taskId);
-                if (index !== -1) {
-                    currentData.splice(index, 1);
-                    render();
-                    triggerAutosave();
-                }
-            }
+            if (task) { task.completed = false; render(); triggerAutosave(); }
         }
 
         function addSubtaskById(taskId) {
@@ -944,7 +742,7 @@
                 task.subtasks.push({ text: "", done: false });
                 render();
                 setTimeout(() => {
-                    const inputs = document.querySelectorAll(`#subtasks-${taskId} input[type="text"], #subtasks-${taskId} .subtask-input`);
+                    const inputs = document.querySelectorAll(`#subtasks-${taskId} .subtask-input`);
                     if(inputs.length > 0) inputs[inputs.length - 1].focus();
                 }, 50);
                 triggerAutosave();
@@ -984,7 +782,6 @@
                 animation: 150,
                 ghostClass: 'dragging',
                 onEnd: function(evt) {
-                    // Re-sort the main array based on new visual order
                     const newOrderIds = Array.from(document.getElementById('activeList').children).map(li => {
                         const handler = li.querySelector('input[type="checkbox"]').getAttribute('onchange');
                         const match = handler.match(/'([^']+)'/);
@@ -1000,18 +797,15 @@
 
                     const completedTasks = currentData.filter(t => t.completed);
                     currentData = [...newActiveTasks, ...completedTasks];
-                    
                     render();
                     triggerAutosave();
                 }
             });
         }
 
-        // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
-        // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
+        // --- APP VERSION CHECK ---
         async function fetchPageStatus() {
             const statusSpan = document.getElementById('pageStatus');
-            
             if(statusSpan) {
                 statusSpan.style.display = 'inline'; 
                 statusSpan.innerText = "Checking...";
@@ -1019,8 +813,6 @@
             }
             
             try {
-                // 1. Fetch LATEST index.html commit ID
-                // Using ?_t= to bust cache
                 const indexFileUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/index.html?ref=${BRANCH}&_t=${Date.now()}`;
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
@@ -1030,29 +822,21 @@
                 };
                 if (authToken) headers['Authorization'] = `token ${authToken}`;
 
-                const indexRes = await fetch(indexFileUrl, { 
-                    headers, 
-                    cache: 'no-store' 
-                });
-                
+                const indexRes = await fetch(indexFileUrl, { headers, cache: 'no-store' });
                 let appLatestCommitID = null;
+                
                 if (indexRes.ok) {
-                    const indexData = await indexRes.json();
-                    appLatestCommitID = indexData.sha.substring(0, 7);
+                    appLatestCommitID = (await indexRes.json()).sha.substring(0, 7);
                 } else {
-                    // Fallback: use repo HEAD commit if index.html fetch fails
                     const commitsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
                     const commitsRes = await fetch(commitsUrl, { headers, cache: 'no-store' });
                     if (commitsRes.ok) {
-                        const commitsData = await commitsRes.json();
-                        appLatestCommitID = commitsData[0].sha.substring(0, 7);
+                        appLatestCommitID = (await commitsRes.json())[0].sha.substring(0, 7);
                     }
                 }
 
-                // 2. Compare against stored local app commit ID
                 if (statusSpan && appLatestCommitID) {
                     if (!lastAppCommitID) {
-                        // First time checking, store it
                         lastAppCommitID = appLatestCommitID;
                         localStorage.setItem('lumo_app_commit_id', lastAppCommitID);
                         statusSpan.innerText = `Updated ✔ (Current: ${appLatestCommitID})`;
@@ -1064,19 +848,15 @@
                     } else {
                         statusSpan.innerText = `⚠️ Pending (${lastAppCommitID} -> ${appLatestCommitID})`;
                         statusSpan.style.color = 'var(--danger)';
-                        
                         const banner = document.getElementById('updateBanner');
                         if(banner) {
                             banner.style.display = 'block';
                             banner.innerHTML = `⎛ New app version detected. GitHub Pages is deploying. <br>Please refresh page in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
                         }
-                        
-                        // Update stored ID to reflect the latest available (even if not yet loaded)
                         localStorage.setItem('lumo_app_commit_id', appLatestCommitID);
                         lastAppCommitID = appLatestCommitID;
                     }
                 }
-
             } catch (e) {
                 console.error("Status check failed:", e);
                 if(statusSpan) {
@@ -1088,14 +868,11 @@
 
         // --- LOGIN LOGIC ---
         function showLogin() {
-            console.log("showLogin called");
             const modal = document.getElementById('loginModal');
             if (modal) {
                 modal.classList.add('show');
                 modal.style.display = 'flex';
                 document.getElementById('tokenInput').focus();
-            } else {
-                console.error("Modal element not found!");
             }
         }
 
@@ -1109,8 +886,6 @@
 
         function saveToken() {
             const token = document.getElementById('tokenInput').value.trim();
-            console.log("Token submitted:", token.substring(0, 15) + "...");
-            
             if (token && token.includes('pat_')) {
                 localStorage.setItem('gh_token', token);
                 authToken = token;
@@ -1126,7 +901,6 @@
         function updateUIState() {
             const adminPanel = document.getElementById('adminPanel');
             const loginBtn = document.getElementById('loginBtn');
-
             if (isAdmin) {
                 adminPanel.classList.add('active');
                 loginBtn.style.display = 'none';
@@ -1138,7 +912,7 @@
             }
         }
 
-        // --- INIT ---
+        // --- INITIALIZATION ---
         window.onload = function() {
             updateUIState();
             fetchData();
