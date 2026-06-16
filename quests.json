@@ -9,6 +9,10 @@
       {
         "text": "Restored items, order by date",
         "done": false
+      },
+      {
+        "text": "Refresh button overwriting saved quest loglog",
+        "done": false
       }
     ]
   },
@@ -20,7 +24,11 @@
     "completed": false,
     "subtasks": [
       {
-        "text": "34+ qi seeds ",
+        "text": "Forge tools",
+        "done": false
+      },
+      {
+        "text": "Skull Cavern",
         "done": false
       },
       {
@@ -28,15 +36,11 @@
         "done": false
       },
       {
+        "text": "34+ qi seeds ",
+        "done": false
+      },
+      {
         "text": "Fix animal lightning rod pens (3wide)",
-        "done": false
-      },
-      {
-        "text": "Forge tools",
-        "done": false
-      },
-      {
-        "text": "Skull Cavern",
         "done": false
       }
     ]
@@ -166,12 +170,8 @@
     "completed": true,
     "subtasks": [
       {
-        "text": "5 Ancient fruit",
+        "text": "Wine (silver)",
         "done": false
-      },
-      {
-        "text": "Caviar",
-        "done": true
       },
       {
         "text": "Dino mayo",
@@ -182,12 +182,16 @@
         "done": true
       },
       {
+        "text": "5 Ancient fruit",
+        "done": false
+      },
+      {
         "text": "Void salmon",
         "done": false
       },
       {
-        "text": "Wine (silver)",
-        "done": false
+        "text": "Caviar",
+        "done": true
       }
     ]
   },
@@ -608,11 +612,11 @@
     "completed": true,
     "subtasks": [
       {
-        "text": "100 hardwood",
+        "text": "65k",
         "done": false
       },
       {
-        "text": "65k",
+        "text": "100 hardwood",
         "done": false
       }
     ]
@@ -681,7 +685,7 @@
     "completed": true,
     "subtasks": [
       {
-        "text": "Move animal production left, shift animal buildings/wall",
+        "text": "Move shopping bin to right entrance",
         "done": false
       },
       {
@@ -693,7 +697,7 @@
         "done": false
       },
       {
-        "text": "Move horse where dog was",
+        "text": "Move main house where greenhouse was",
         "done": false
       },
       {
@@ -701,11 +705,11 @@
         "done": false
       },
       {
-        "text": "Move main house where greenhouse was",
+        "text": "Move horse where dog was",
         "done": false
       },
       {
-        "text": "Move shopping bin to right entrance",
+        "text": "Move animal production left, shift animal buildings/wall",
         "done": false
       }
     ]
