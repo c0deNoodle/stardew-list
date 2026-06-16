@@ -4,7 +4,7 @@
     "title": "App",
     "season": "",
     "day": "",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Restored items, order by date",
