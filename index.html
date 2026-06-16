@@ -407,8 +407,12 @@
         let isAdmin = !!authToken;
         let sortableActive = null;
         
-        // NEW: Track the SHA of the version currently in memory to detect conflicts
-        let currentSha = null; 
+        // Track commit IDs for quests.json and index.html
+        let lastQuestCommitID = localStorage.getItem('lumo_quest_commit_id') || null;
+        let lastAppCommitID = localStorage.getItem('lumo_app_commit_id') || null;
+        
+        // Store a reference to the last synced state to help with merge logic if needed,
+        // although it primarily relies on ID-based merging from currentData vs Server.
         let saveTimeout = null;
 
         // --- STATUS INDICATOR LOGIC ---
@@ -506,7 +510,7 @@
             
             if (saveTimeout) clearTimeout(saveTimeout);
             
-            // Debounce to prevent excessive API calls during rapid typing/dragging
+            // Debounce slightly
             saveTimeout = setTimeout(async () => {
                 await safeSaveData();
             }, 800);
@@ -529,11 +533,10 @@
                 if (!response.ok) {
                     if (response.status === 404) {
                         currentData = [];
-                        currentSha = null;
+                        lastQuestCommitID = null;
+                        localStorage.removeItem('lumo_quest_commit_id');
                         render();
                         setStatus('idle');
-                        // Even on 404, we should check status (e.g., if repo was deleted or file removed)
-                        // But usually we stop here. Let's just return.
                         return;
                     }
                     throw new Error(`HTTP ${response.status}`);
@@ -542,14 +545,17 @@
                 const json = await response.json();
                 const content = atob(json.content);
                 currentData = JSON.parse(content);
-                currentSha = json.sha; 
+                
+                // Store the COMMIT ID from GitHub's response
+                const serverCommitID = json.sha; 
+                lastQuestCommitID = serverCommitID;
+                localStorage.setItem('lumo_quest_commit_id', lastQuestCommitID);
                 
                 render();
                 setStatus('idle');
 
-                // *** NEW: Immediately check deployment status after data load ***
-                // This ensures the Commit ID badge is always fresh when you click Refresh
-                setTimeout(fetchPageStatus, 500); 
+                // Trigger status check AFTER rendering data
+                setTimeout(fetchPageStatus, 200); 
 
             } catch (e) {
                 console.error(e);
@@ -558,6 +564,8 @@
         }
 
         // --- SAVING DATA WITH CONFLICT RESOLUTION ---
+        // --- SAVING DATA WITH COMMIT ID VALIDATION ---
+        // --- SAVING DATA WITH SMART MERGE LOGIC ---
         async function safeSaveData(maxRetries = 3) {
             if (!authToken) return;
             
@@ -568,31 +576,30 @@
             while (attempts < maxRetries) {
                 attempts++;
                 try {
-                    // 1. GET THE LATEST VERSION FROM SERVER
+                    // 1. Fetch LATEST metadata BEFORE saving to check for conflicts
                     const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
                     const headers = { 
                         'Authorization': `token ${authToken}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate'
                     };
                     
                     const getRes = await fetch(getUrl, { 
                         headers, 
-                        cache: 'no-store' // CRITICAL: Get fresh data every time
+                        cache: 'no-store' 
                     });
 
                     if (!getRes.ok) {
-                        // If file doesn't exist yet (first ever create), treat as 404
                         if (getRes.status === 404) {
+                            // First ever create case
                             const newContent = btoa(JSON.stringify(currentData, null, 2));
-                            const putUrl = getUrl;
                             const putBody = {
                                 message: "Create quest log",
                                 content: newContent,
                                 branch: BRANCH
                             };
-                            await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
-                            
-                            // Update state after success
+                            await fetch(getUrl, { method: 'PUT', headers, body: JSON.stringify(putBody) });
+                            // Success handled below
                             setStatus('complete');
                             return;
                         }
@@ -600,34 +607,68 @@
                     }
 
                     const fileInfo = await getRes.json();
-                    const serverSha = fileInfo.sha;
-                    const serverContent = atob(fileInfo.content);
-                    let serverData = JSON.parse(serverContent);
+                    const serverCommitID = fileInfo.sha; 
+                    
+                    // 2. Check if server has changed since our last known state
+                    if (serverCommitID !== lastQuestCommitID) {
+                        console.log(`Commit ID differs! Local: ${lastQuestCommitID}, Server: ${serverCommitID}. Merging changes...`);
+                        
+                        // A. Fetch the fresh server content
+                        const serverContent = atob(fileInfo.content);
+                        const serverData = JSON.parse(serverContent);
+                        
+                        // B. Create a Map of server items for fast lookup
+                        const serverMap = new Map();
+                        serverData.forEach(item => serverMap.set(item.id, item));
+                        
+                        // C. Start with a copy of the fresh server data
+                        let mergedData = [...serverData];
+                        
+                        // D. Apply LOCAL CHANGES (from currentData) onto the fresh data
+                        currentData.forEach(localItem => {
+                            if (!serverMap.has(localItem.id)) {
+                                // Item exists locally but not on server -> NEW ADDITION
+                                // Add it to the front or end? Let's add to front to match typical "newest first"
+                                mergedData.unshift(localItem);
+                            } else {
+                                // Item exists in both. Check if local version is different (Edit).
+                                // Compare content to avoid overwriting if nothing changed, 
+                                // though simple overwrite of fields is usually safer for "apply my edit".
+                                const serverItem = serverMap.get(localItem.id);
+                                
+                                // Deep compare for safety (or just overwrite fields)
+                                // Strategy: Overwrite specific fields from localItem to serverItem
+                                serverItem.title = localItem.title;
+                                serverItem.completed = localItem.completed;
+                                serverItem.season = localItem.season;
+                                serverItem.day = localItem.day;
+                                serverItem.subtasks = JSON.parse(JSON.stringify(localItem.subtasks)); // Deep copy subtasks
+                            }
+                        });
 
-                    // 2. CHECK FOR CONFLICT
-                    if (serverSha !== currentSha) {
-                        console.log(`Conflict detected! Local SHA: ${currentSha}, Server SHA: ${serverSha}. Attempting merge...`);
+                        // Explicitly filter out items from serverData that are missing in currentData.
                         
-                        // Merge local changes into the latest server data
-                        currentData = mergeData(serverData, currentData);
+                        const localIds = new Set(currentData.map(i => i.id));
+                        mergedData = mergedData.filter(item => localIds.has(item.id));
+
+                        // F. Update currentData to this merged result
+                        currentData = mergedData;
                         
-                        // Update our local pointer to match the server state we just merged with
-                        currentSha = serverSha;
+                        // G. Update local commit tracker to match the server base just merged with
+                        lastQuestCommitID = serverCommitID;
                     }
 
-                    // 3. PREPARE TO SAVE
+                    // 3. Prepare and push the now-merged data
                     const newContent = btoa(JSON.stringify(currentData, null, 2));
-                    const putUrl = getUrl;
                     
                     const putBody = {
                         message: "Update quest log via webapp",
                         content: newContent,
-                        sha: currentSha, // Use the (possibly updated) SHA
+                        sha: serverCommitID, // Use the latest commit ID fetched
                         branch: BRANCH
                     };
 
-                    // 4. ATTEMPT WRITE
-                    const putRes = await fetch(putUrl, {
+                    const putRes = await fetch(getUrl, {
                         method: 'PUT',
                         headers: headers,
                         body: JSON.stringify(putBody)
@@ -635,28 +676,30 @@
 
                     if (!putRes.ok) {
                         const errJson = await putRes.json().catch(() => ({}));
-                        // If error is about SHA mismatch (race condition happened again), retry
                         if (errJson.message && (errJson.message.includes("SHA") || errJson.message.includes("Base64"))) {
+                            // Race condition: someone else saved again while processing. Retry.
                             continue; 
                         }
                         throw new Error("Save failed: " + putRes.statusText);
                     }
 
-                    // Success! Update local SHA from response
+                    // 4. Success! Update local commit ID tracker
                     const putJson = await putRes.json();
-                    currentSha = putJson.content.sha;
+                    lastQuestCommitID = putJson.content.sha;
+                    localStorage.setItem('lumo_quest_commit_id', lastQuestCommitID);
+                    
+                    // Re-render to show the final state
+                    render();
                     
                     setStatus('complete');
-                    return; // Exit loop on success
+                    return;
 
                 } catch (e) {
                     console.error(`Save attempt ${attempts} failed:`, e);
-                    // If we hit max retries, stop
                     if (attempts >= maxRetries) {
-                        setStatus('error', "Sync failed due to network or persistent conflicts. Please refresh.");
+                        setStatus('error', "Sync failed due to conflicts. Please refresh.");
                         return;
                     }
-                    // Wait briefly before retrying
                     await new Promise(r => setTimeout(r, 500));
                 }
             }
@@ -668,7 +711,7 @@
             
             let processedText = text;
             
-            // Iterate through our NPC map
+            // Iterate through NPC map
             for (const [name, filename] of Object.entries(NPC_ICONS)) {
                 // Match the whole word, case insensitive
                 const regex = new RegExp(`\\b${name}\\b`, 'gi');
@@ -710,7 +753,7 @@
                 if (!hasDateA && hasDateB) return -1;
                 if (hasDateA && !hasDateB) return 1;
                 
-                // If both have no date, or both have dates, we continue to secondary checks
+                // If both have no date, or both have dates, continue to secondary checks
                 // If neither has a date, maintain relative order (stable sort) or maybe by creation time? 
                 // For now, let's keep them as they are if both undated.
                 if (!hasDateA && !hasDateB) return 0; 
@@ -965,62 +1008,81 @@
         }
 
         // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
+        // --- FETCH DEPLOYMENT STATUS & LATEST COMMIT ---
         async function fetchPageStatus() {
             const statusSpan = document.getElementById('pageStatus');
             
-            statusSpan.style.display = 'inline';
-            statusSpan.innerText = "Checking...";
-            statusSpan.className = "";
+            if(statusSpan) {
+                statusSpan.style.display = 'inline'; 
+                statusSpan.innerText = "Checking...";
+                statusSpan.className = "";
+            }
             
             try {
-                const latestCommitUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
+                // 1. Fetch LATEST index.html commit ID
+                // Using ?_t= to bust cache
+                const indexFileUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/index.html?ref=${BRANCH}&_t=${Date.now()}`;
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
-                    'User-Agent': 'StardewQuestLog'
+                    'User-Agent': 'StardewQuestLog',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
                 };
                 if (authToken) headers['Authorization'] = `token ${authToken}`;
 
-                const latestRes = await fetch(latestCommitUrl, { headers, cache: 'no-store' });
-                if (!latestRes.ok) throw new Error("Failed to fetch latest commit");
-                const latestData = await latestRes.json();
-                const latestSha = latestData[0].sha.substring(0, 7);
-
-                const deploymentsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/pages/deployments?per_page=1&_t=${Date.now()}`;
-                const deployRes = await fetch(deploymentsUrl, { headers, cache: 'no-store' });
+                const indexRes = await fetch(indexFileUrl, { 
+                    headers, 
+                    cache: 'no-store' 
+                });
                 
-                let liveSha = null;
-
-                if (deployRes.ok) {
-                    const deployments = await deployRes.json();
-                    const successDeploy = deployments.find(d => d.state === 'success');
-                    
-                    if (successDeploy) {
-                        liveSha = successDeploy.sha.substring(0, 7);
-                    } else {
-                        liveSha = latestSha; 
+                let appLatestCommitID = null;
+                if (indexRes.ok) {
+                    const indexData = await indexRes.json();
+                    appLatestCommitID = indexData.sha.substring(0, 7);
+                } else {
+                    // Fallback: use repo HEAD commit if index.html fetch fails
+                    const commitsUrl = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1&_t=${Date.now()}`;
+                    const commitsRes = await fetch(commitsUrl, { headers, cache: 'no-store' });
+                    if (commitsRes.ok) {
+                        const commitsData = await commitsRes.json();
+                        appLatestCommitID = commitsData[0].sha.substring(0, 7);
                     }
-                } else {
-                    console.warn("Could not fetch deployment status. Assuming latest is live.");
-                    liveSha = latestSha;
                 }
-                
-                if (liveSha === latestSha) {
-                    statusSpan.innerText = `Updated ✔ (Current: ${liveSha})`;
-                    statusSpan.style.color = 'var(--success)';
-                    document.getElementById('updateBanner').style.display = 'none';
-                } else {
-                    statusSpan.innerText = `⚠️ Pending (${liveSha} -> ${latestSha})`;
-                    statusSpan.style.color = 'var(--danger)';
-                    
-                    const banner = document.getElementById('updateBanner');
-                    banner.style.display = 'block';
-                    banner.innerHTML = `⚠️ New commit detected. GitHub Pages is deploying. <br>Please refresh in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
+
+                // 2. Compare against stored local app commit ID
+                if (statusSpan && appLatestCommitID) {
+                    if (!lastAppCommitID) {
+                        // First time checking, store it
+                        lastAppCommitID = appLatestCommitID;
+                        localStorage.setItem('lumo_app_commit_id', lastAppCommitID);
+                        statusSpan.innerText = `Updated ✔ (Current: ${appLatestCommitID})`;
+                        statusSpan.style.color = 'var(--success)';
+                    } else if (appLatestCommitID === lastAppCommitID) {
+                        statusSpan.innerText = `Updated ✔ (Current: ${appLatestCommitID})`;
+                        statusSpan.style.color = 'var(--success)';
+                        document.getElementById('updateBanner').style.display = 'none';
+                    } else {
+                        statusSpan.innerText = `⚠️ Pending (${lastAppCommitID} -> ${appLatestCommitID})`;
+                        statusSpan.style.color = 'var(--danger)';
+                        
+                        const banner = document.getElementById('updateBanner');
+                        if(banner) {
+                            banner.style.display = 'block';
+                            banner.innerHTML = `⎛ New app version detected. GitHub Pages is deploying. <br>Please refresh page in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
+                        }
+                        
+                        // Update stored ID to reflect the latest available (even if not yet loaded)
+                        localStorage.setItem('lumo_app_commit_id', appLatestCommitID);
+                        lastAppCommitID = appLatestCommitID;
+                    }
                 }
 
             } catch (e) {
                 console.error("Status check failed:", e);
-                statusSpan.innerText = "Error checking status";
-                statusSpan.style.color = '#888';
+                if(statusSpan) {
+                    statusSpan.innerText = "Error checking status";
+                    statusSpan.style.color = '#888';
+                }
             }
         }
 
