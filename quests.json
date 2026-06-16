@@ -64,6 +64,19 @@
     ]
   },
   {
+    "id": "1000000000005",
+    "title": "[Bday] Pam",
+    "season": "Spring",
+    "day": "18",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000007",
     "title": "[Bday] Pierre",
     "season": "Spring",
@@ -85,19 +98,6 @@
     "subtasks": [
       {
         "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000005",
-    "title": "[Bday] Pam",
-    "season": "Spring",
-    "day": "18",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
         "done": false
       }
     ]
