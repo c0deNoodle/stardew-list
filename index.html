@@ -511,7 +511,7 @@
             try {
                 // Get Local Commit ID from Meta Tag
                 const metaTag = document.querySelector('meta[name="app-commit-id"]');
-                const localCommit = metaTag ? metaTag.getAttribute('content') : 'UNKNOWN';
+                const localCommit = metaTag ? metaTag.getAttribute('content') : 'VERSION-PLACEHOLDER';
 
                 // Fetch Latest Commit ID from GitHub API
                 // Cache busting via query param only (no custom headers)
@@ -528,7 +528,7 @@
                 const data = await res.json();
                 const serverCommit = data.sha.substring(0, 7);
 
-                if (localCommit === 'UNKNOWN') {
+                if (localCommit === 'VERSION-PLACEHOLDER') {
                     // Fallback if build didn't inject
                     pageStatus.innerText = `Updated ✔ (Current: ${serverCommit})`;
                     pageStatus.style.color = 'var(--success)';
@@ -542,12 +542,12 @@
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // Mismatch
-                    pageStatus.innerText = `⚠️ Pending (${localCommit} -> ${serverCommit})`;
+                    pageStatus.innerText = `⚠ Pending (${localCommit} -> ${serverCommit})`;
                     pageStatus.style.color = 'var(--danger)';
                     const banner = document.getElementById('updateBanner');
                     if(banner) {
                         banner.style.display = 'block';
-                        banner.innerHTML = `⎛ New app version detected. GitHub Pages is deploying. <br>Please refresh page in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
+                        banner.innerHTML = `⚠ New app version detected. GitHub Pages is deploying. <br>Please refresh page in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
                     }
                 }
             } catch (e) {
