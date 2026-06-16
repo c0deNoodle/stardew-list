@@ -42,19 +42,6 @@
     ]
   },
   {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000005",
     "title": "[Bday] Pam",
     "season": "Spring",
@@ -63,6 +50,19 @@
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
