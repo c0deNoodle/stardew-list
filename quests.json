@@ -11,7 +11,7 @@
         "done": false
       },
       {
-        "text": "",
+        "text": "fix issue of refresh button overwriting saves",
         "done": false
       }
     ]
