@@ -51,19 +51,6 @@
     ]
   },
   {
-    "id": "1000000000008",
-    "title": "[Bday] Emily",
-    "season": "Spring",
-    "day": "27",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000005",
     "title": "[Bday] Pam",
     "season": "Spring",
@@ -72,6 +59,19 @@
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000008",
+    "title": "[Bday] Emily",
+    "season": "Spring",
+    "day": "27",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
         "done": false
       }
     ]
