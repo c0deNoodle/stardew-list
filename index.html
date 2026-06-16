@@ -523,7 +523,7 @@
 
                 const response = await fetch(url, { 
                     headers,
-                    cache: 'no-store' // CRITICAL: Bypass browser cache
+                    cache: 'no-store' 
                 });
                 
                 if (!response.ok) {
@@ -532,6 +532,8 @@
                         currentSha = null;
                         render();
                         setStatus('idle');
+                        // Even on 404, we should check status (e.g., if repo was deleted or file removed)
+                        // But usually we stop here. Let's just return.
                         return;
                     }
                     throw new Error(`HTTP ${response.status}`);
@@ -540,10 +542,15 @@
                 const json = await response.json();
                 const content = atob(json.content);
                 currentData = JSON.parse(content);
-                currentSha = json.sha; // Store the SHA
+                currentSha = json.sha; 
                 
                 render();
                 setStatus('idle');
+
+                // *** NEW: Immediately check deployment status after data load ***
+                // This ensures the Commit ID badge is always fresh when you click Refresh
+                setTimeout(fetchPageStatus, 500); 
+
             } catch (e) {
                 console.error(e);
                 setStatus('error', "Error loading data.");
