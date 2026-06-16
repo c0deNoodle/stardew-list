@@ -675,6 +675,15 @@
         }
 
         // --- UI LOGIC ---
+        
+        // Define the order of seasons for sorting
+        const SEASON_ORDER = {
+            "Spring": 1,
+            "Summer": 2,
+            "Fall": 3,
+            "Winter": 4
+        };
+
         function render() {
             const activeList = document.getElementById('activeList');
             const completedList = document.getElementById('completedList');
@@ -684,6 +693,39 @@
 
             const activeTasks = currentData.filter(t => !t.completed);
             const completedTasks = currentData.filter(t => t.completed);
+
+            // *** SORTING LOGIC FOR ACTIVE TASKS ***
+            activeTasks.sort((a, b) => {
+                const hasDateA = (a.season && a.day) ? true : false;
+                const hasDateB = (b.season && b.day) ? true : false;
+
+                // Rule 1: Items without a date come FIRST
+                if (!hasDateA && hasDateB) return -1;
+                if (hasDateA && !hasDateB) return 1;
+                
+                // If both have no date, or both have dates, we continue to secondary checks
+                // If neither has a date, maintain relative order (stable sort) or maybe by creation time? 
+                // For now, let's keep them as they are if both undated.
+                if (!hasDateA && !hasDateB) return 0; 
+
+                // Both have dates. Now compare Season -> Day
+                
+                // Get season numbers (default to high number if missing, though check above ensures they exist)
+                const seasonA = SEASON_ORDER[a.season] || 99;
+                const seasonB = SEASON_ORDER[b.season] || 99;
+
+                // Compare Seasons first
+                if (seasonA !== seasonB) {
+                    return seasonA - seasonB; // Spring (1) < Summer (2)
+                }
+
+                // If seasons are equal, compare Days
+                const dayA = parseInt(a.day) || 0;
+                const dayB = parseInt(b.day) || 0;
+
+                return dayA - dayB; // Ascending order (Day 1 < Day 14)
+            });
+            // *** END SORTING LOGIC ***
 
             activeTasks.forEach((task) => {
                 const li = document.createElement('li');
