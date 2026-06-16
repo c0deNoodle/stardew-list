@@ -411,19 +411,6 @@
 
         const SEASON_ORDER = { "Spring": 1, "Summer": 2, "Fall": 3, "Winter": 4 };
 
-        // --- INITIALIZATION ---
-        window.onload = function() {
-            updateUIState(); // Sets visibility based on auth
-            
-            // Always load data (view-only if not admin)
-            fetchData();
-            
-            // Only check app version if logged in (to avoid CORS/rate limit issues for guests)
-            if (isAdmin) {
-                checkAppVersion();
-            }
-        };
-
         function updateUIState() {
             if (isAdmin) {
                 // Admin Mode
@@ -497,25 +484,25 @@
 
         // Handle Refresh Button - Sync Data + Check App Version
         async function handleRefresh() {
-            if (!isAdmin) return; // Guard: Guests cannot refresh
+            if (!isAdmin) return; 
             await safeSaveData();
             await checkAppVersion();
         }
 
         // Checks if the local loaded app (from meta tag) matches the latest on GitHub
         async function checkAppVersion() {
-            if (!pageStatus) return;
+            if (!pageStatus || !isAdmin) return;
             pageStatus.innerText = "Checking...";
             pageStatus.style.color = '#888';
 
             try {
                 // Get Local Commit ID from Meta Tag
                 const metaTag = document.querySelector('meta[name="app-commit-id"]');
-                const localCommit = metaTag ? metaTag.getAttribute('content') : 'VERSION-PLACEHOLDER';
+                const localCommit = metaTag ? metaTag.getAttribute('content') : 'UNKNOWN';
 
-                // Fetch Latest Commit ID from GitHub API
-                // Cache busting via query param only (no custom headers)
-                const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/index.html?ref=${BRANCH}&_t=${Date.now()}`;
+                // Fetch Latest COMMIT SHA (not File SHA) from GitHub
+                // Path filter ensures we get commit touching index.html
+                const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=index.html&per_page=1&_t=${Date.now()}`;
                 const headers = {
                     'Accept': 'application/vnd.github.v3+json',
                     'User-Agent': 'StardewQuestLog'
@@ -525,29 +512,30 @@
                 const res = await fetch(url, { headers });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 
-                const data = await res.json();
-                const serverCommit = data.sha.substring(0, 7);
+                const commits = await res.json();
+                if (!commits.length) throw new Error("No commits found");
+                
+                const serverCommit = commits[0].sha.substring(0, 7);
 
-                if (localCommit === 'VERSION-PLACEHOLDER') {
-                    // Fallback if build didn't inject
-                    pageStatus.innerText = `Updated ✔ (Current: ${serverCommit})`;
+                if (localCommit === 'UNKNOWN' || !serverCommit) {
+                    pageStatus.innerText = `Updated ✔ (Server: ${serverCommit})`;
                     pageStatus.style.color = 'var(--success)';
                     return;
                 }
 
-                if (serverCommit.startsWith(localCommit)) {
+                if (serverCommit.startsWith(localCommit.substring(0, 7))) {
                     // Match
                     pageStatus.innerText = `Updated ✔ (Current: ${serverCommit})`;
                     pageStatus.style.color = 'var(--success)';
                     document.getElementById('updateBanner').style.display = 'none';
                 } else {
                     // Mismatch
-                    pageStatus.innerText = `⚠ Pending (${localCommit} -> ${serverCommit})`;
+                    pageStatus.innerText = `⚠️ Pending (${localCommit.substring(0, 7)} -> ${serverCommit})`;
                     pageStatus.style.color = 'var(--danger)';
                     const banner = document.getElementById('updateBanner');
                     if(banner) {
                         banner.style.display = 'block';
-                        banner.innerHTML = `⚠ New app version detected. GitHub Pages is deploying. <br>Please refresh page in 1-2 minutes. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Now</button>`;
+                        banner.innerHTML = `⎛ New app version detected. <br>Please refresh page to update. <button onclick="location.reload()" style="background: white; color: #ff9800; margin-left: 10px; padding: 4px 8px; border:none; border-radius:4px; cursor:pointer;">Refresh Page</button>`;
                     }
                 }
             } catch (e) {
@@ -589,7 +577,7 @@
             }
         }
 
-        // --- SAVING DATA WITH MERGE (CORS SAFE) ---
+        // --- SAVING DATA WITH MERGE ---
         async function safeSaveData(maxRetries = 3) {
             if (!authToken) return;
             setStatus('saving');
@@ -598,11 +586,12 @@
             while (attempts < maxRetries) {
                 attempts++;
                 try {
+                    // Query param used for cache busting instead of headers
                     const getUrl = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?_t=${Date.now()}`;
                     const headers = { 
                         'Authorization': `token ${authToken}`,
                         'Content-Type': 'application/json'
-                        // REMOVED: Cache-Control, Pragma, etc. to prevent CORS preflight failure
+                        // Removed Cache-Control to prevent CORS preflight failure
                     };
                     
                     const getRes = await fetch(getUrl, { headers });
@@ -616,8 +605,6 @@
                                 content: newContent,
                                 branch: BRANCH
                             })});
-                            // Note: We can't easily get the SHA back on 201 without reading response body, 
-                            // but next fetch will get it.
                             setStatus('complete');
                             return;
                         }
@@ -625,17 +612,7 @@
                     }
 
                     const fileInfo = await getRes.json();
-                    const serverFileSha = fileInfo.sha; // File blob SHA
-                    const serverCommitInfo = fileInfo; // This object contains the commit info indirectly? 
-                    // Actually /contents returns the file SHA, not the commit SHA directly in a separate field, 
-                    // but we use the file SHA for the PUT request.
-                    
-                    // The /contents endpoint returns a "sha" which is the FILE BLOB SHA.
-                    // To get the actual GIT COMMIT SHA, we usually need a separate call or parse the tree.
-                    // HOWEVER, for the purpose of overwriting, the FILE SHA is the correct value to use in the PUT request "sha" parameter.
-                    // And we use it to detect if the file content changed.
-                    
-                    const currentServerFileSha = fileInfo.sha;
+                    const currentServerFileSha = fileInfo.sha; 
 
                     // Merge Logic: If local tracker differs from server file SHA
                     if (currentServerFileSha !== lastQuestCommitID) {
@@ -671,7 +648,7 @@
                     const putBody = {
                         message: "Update quest log via webapp",
                         content: btoa(JSON.stringify(currentData, null, 2)),
-                        sha: currentServerFileSha, // Use the fetched file SHA
+                        sha: currentServerFileSha, 
                         branch: BRANCH
                     };
 
@@ -684,7 +661,6 @@
                     }
 
                     const putJson = await putRes.json();
-                    // Update tracker to the NEW file SHA
                     lastQuestCommitID = putJson.content.sha;
                     localStorage.setItem('lumo_quest_commit_id', lastQuestCommitID);
                     render();
@@ -976,6 +952,24 @@
                 setStatus('idle');
             }
         }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            updateUIState(); // Sets visibility based on auth
+            
+            // Always load data (view-only if not admin)
+            fetchData();
+            
+            // Set initial status to Updated based on loaded meta tag
+            // Assumes loaded page is current; check API only on Refresh
+            const metaTag = document.querySelector('meta[name="app-commit-id"]');
+            if (metaTag && isAdmin) {
+                const localCommit = metaTag.getAttribute('content') || 'UNKNOWN';
+                pageStatus.innerText = `Updated ✔ (Current: ${localCommit.substring(0, 7)})`;
+                pageStatus.style.color = 'var(--success)';
+                pageStatus.style.display = 'inline-block';
+            }
+        };
     </script>
 </body>
 </html>
