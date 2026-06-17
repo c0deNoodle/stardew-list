@@ -20,16 +20,30 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # CRITICAL: Needed to see full git history for index.html
 
       - name: Inject Commit ID into index.html
         run: |
-          # Check if index.html was modified in THIS commit
-          if git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep -q "index.html"; then
-            echo "index.html changed. Injecting commit SHA: ${{ github.sha }}"
-            sed -i "s/content=\"VERSION-PLACEHOLDER\"/content=\"${{ github.sha }}\"/" index.html
+          CURRENT_SHA="${{ github.sha }}"
+          
+          # Check if index.html was modified IN THIS SPECIFIC COMMIT
+          if git diff-tree --no-commit-id --name-only -r $CURRENT_SHA | grep -q "^index\.html$"; then
+            echo "index.html changed in this commit ($CURRENT_SHA). Injecting new SHA."
+            # Replace placeholder with the NEW commit SHA
+            sed -i "s/content=\"VERSION-PLACEHOLDER\"/content=\"$CURRENT_SHA\"/" index.html
           else
-            echo "index.html unchanged. Skipping injection. Keeping existing content."
+            echo "index.html unchanged in this commit. Fetching LAST known index.html commit."
+            
+            # Try to get history
+            LAST_INDEX_SHA=$(git log -n 1 --format="%H" -- index.html 2>/dev/null)
+            
+            if [ -z "$LAST_INDEX_SHA" ]; then
+              echo "No history found for index.html. Using current commit SHA."
+              LAST_INDEX_SHA="$CURRENT_SHA"
+            fi
+            
+            echo "Injecting SHA: $LAST_INDEX_SHA"
+            sed -i "s/content=\"VERSION-PLACEHOLDER\"/content=\"$LAST_INDEX_SHA\"/" index.html
           fi
       
       - name: Setup Pages
