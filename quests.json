@@ -1,22 +1,5 @@
 [
   {
-    "id": "1781292685618",
-    "title": "App",
-    "season": "",
-    "day": "",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Restored items, order by date",
-        "done": false
-      },
-      {
-        "text": "fix issue of refresh button overwriting saves",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780868757795",
     "title": "Next time",
     "season": "",
@@ -38,9 +21,18 @@
       {
         "text": "plant remaining qi seeds",
         "done": false
-      },
+      }
+    ]
+  },
+  {
+    "id": "1000000000004",
+    "title": "[Bday] Haley",
+    "season": "Spring",
+    "day": "14",
+    "completed": false,
+    "subtasks": [
       {
-        "text": "Fix animal lightning rod pens (3wide)",
+        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
@@ -54,19 +46,6 @@
     "subtasks": [
       {
         "text": "Beer, Cactus Fruit, Glazed Yams, Pale Ale, Parsnip, Parsnip Soup, Pina Colada",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000004",
-    "title": "[Bday] Haley",
-    "season": "Spring",
-    "day": "14",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Coconut, Fruit Salad, Pink Cake, Sunflower. Golden Pumpkin",
         "done": false
       }
     ]
@@ -106,6 +85,23 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1781292685618",
+    "title": "App",
+    "season": "",
+    "day": "",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Restored items, order by date",
+        "done": false
+      },
+      {
+        "text": "fix issue of refresh button overwriting saves",
         "done": false
       }
     ]
