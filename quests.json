@@ -1,5 +1,13 @@
 [
   {
+    "id": "1783111703208",
+    "title": "Luau Potluck",
+    "season": "Summer",
+    "day": "11",
+    "completed": false,
+    "subtasks": []
+  },
+  {
     "id": "1780868757795",
     "title": "Next time",
     "season": "",
