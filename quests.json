@@ -4,7 +4,7 @@
     "title": "Luau Potluck",
     "season": "Summer",
     "day": "11",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Qi seasoning",
