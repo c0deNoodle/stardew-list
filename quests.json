@@ -29,24 +29,11 @@
     ]
   },
   {
-    "id": "1000000000010",
-    "title": "[Bday] Gus",
-    "season": "Summer",
-    "day": "8",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Diamond, Fish Taco, Orange",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000011",
     "title": "[Bday] Maru",
     "season": "Summer",
     "day": "10",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
@@ -128,6 +115,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000010",
+    "title": "[Bday] Gus",
+    "season": "Summer",
+    "day": "8",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Fish Taco, Orange",
         "done": false
       }
     ]
