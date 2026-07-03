@@ -17,27 +17,6 @@
       {
         "text": "Crack geodes",
         "done": false
-      },
-      {
-        "text": "Collect rocks",
-        "done": false
-      },
-      {
-        "text": "Reach the bottom of the mines",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000011",
-    "title": "[Bday] Maru",
-    "season": "Summer",
-    "day": "10",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
-        "done": false
       }
     ]
   },
@@ -115,6 +94,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000011",
+    "title": "[Bday] Maru",
+    "season": "Summer",
+    "day": "10",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
         "done": false
       }
     ]
