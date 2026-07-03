@@ -322,7 +322,7 @@
     "title": "[Bday] Maru",
     "season": "Summer",
     "day": "10",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Battery Pack, Cauliflower, Diamond, Gold Bar, Iridium Bar, Miner's Treat, Pepper Poppers, Rhubarb Pie, Strawberry",
