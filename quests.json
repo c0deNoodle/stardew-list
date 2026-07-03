@@ -464,7 +464,7 @@
     "title": "[Bday] Leo",
     "season": "Summer",
     "day": "26",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
@@ -477,7 +477,7 @@
     "title": "[Bday] Willy",
     "season": "Summer",
     "day": "24",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
@@ -490,7 +490,7 @@
     "title": "[Bday] Dwarf",
     "season": "Summer",
     "day": "22",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
@@ -503,7 +503,7 @@
     "title": "[Bday] Demetrius",
     "season": "Summer",
     "day": "19",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
