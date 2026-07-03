@@ -21,19 +21,6 @@
     ]
   },
   {
-    "id": "1000000000006",
-    "title": "[Bday] Shane",
-    "season": "Spring",
-    "day": "20",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000007",
     "title": "[Bday] Pierre",
     "season": "Spring",
@@ -55,6 +42,19 @@
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Cloth, Emerald, Jade, Ruby, Survival Burger, Topaz, Wool",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000006",
+    "title": "[Bday] Shane",
+    "season": "Spring",
+    "day": "20",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Beer, Hot Pepper, Pepper Poppers, Pizza",
         "done": false
       }
     ]
