@@ -33,7 +33,7 @@
     "title": "[Bday] Gus",
     "season": "Summer",
     "day": "8",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Diamond, Fish Taco, Orange",
