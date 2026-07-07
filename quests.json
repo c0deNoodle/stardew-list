@@ -19,7 +19,11 @@
         "done": false
       },
       {
-        "text": "Mines",
+        "text": "Mines (cinder shards)",
+        "done": false
+      },
+      {
+        "text": "",
         "done": false
       }
     ]
