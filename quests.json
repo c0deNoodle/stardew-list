@@ -17,6 +17,10 @@
       {
         "text": "Crack geodes",
         "done": false
+      },
+      {
+        "text": "",
+        "done": false
       }
     ]
   },
@@ -25,7 +29,7 @@
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
