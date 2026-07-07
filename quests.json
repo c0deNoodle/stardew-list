@@ -1,18 +1,5 @@
 [
   {
-    "id": "1783111703208",
-    "title": "Luau Potluck",
-    "season": "Summer",
-    "day": "11",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Qi seasoning",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1780868757795",
     "title": "Next time",
     "season": "",
@@ -38,7 +25,7 @@
     "title": "[Bday] Alex",
     "season": "Summer",
     "day": "13",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Complete Breakfast, Prismatic Shard, Rabbit's Foot, Golden Pumpkin, Salmon Dinner, Jack be Nimble/Thick (book seller)",
@@ -107,6 +94,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1783111703208",
+    "title": "Luau Potluck",
+    "season": "Summer",
+    "day": "11",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Qi seasoning",
         "done": false
       }
     ]
