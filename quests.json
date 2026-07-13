@@ -33,7 +33,7 @@
     "title": "[Bday] Sam",
     "season": "Summer",
     "day": "17",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
