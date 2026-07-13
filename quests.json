@@ -21,23 +21,6 @@
       {
         "text": "Mines (cinder shards)",
         "done": false
-      },
-      {
-        "text": "Mines (1x prismatic shard)",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000015",
-    "title": "[Bday] Dwarf",
-    "season": "Summer",
-    "day": "22",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
-        "done": false
       }
     ]
   },
@@ -63,6 +46,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000015",
+    "title": "[Bday] Dwarf",
+    "season": "Summer",
+    "day": "22",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
         "done": false
       }
     ]
