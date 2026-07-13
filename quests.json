@@ -29,24 +29,11 @@
     ]
   },
   {
-    "id": "1000000000013",
-    "title": "[Bday] Sam",
-    "season": "Summer",
-    "day": "17",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000014",
     "title": "[Bday] Demetrius",
     "season": "Summer",
     "day": "19",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
@@ -89,6 +76,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000013",
+    "title": "[Bday] Sam",
+    "season": "Summer",
+    "day": "17",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Cactus Fruit, Maple Bar, Pizza, Prismatic Shard, Rabbit's Foot",
         "done": false
       }
     ]
