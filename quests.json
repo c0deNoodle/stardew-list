@@ -33,7 +33,7 @@
     "title": "[Bday] Dwarf",
     "season": "Summer",
     "day": "22",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Amethyst, Aquamarine, Emerald, Jade, Omni Geode, Ruby, Topaz",
