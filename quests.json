@@ -29,19 +29,6 @@
     ]
   },
   {
-    "id": "1000000000014",
-    "title": "[Bday] Demetrius",
-    "season": "Summer",
-    "day": "19",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000015",
     "title": "[Bday] Dwarf",
     "season": "Summer",
@@ -76,6 +63,19 @@
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000014",
+    "title": "[Bday] Demetrius",
+    "season": "Summer",
+    "day": "19",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Bean Hotpot, Ice Cream, Rice Pudding, Strawberry",
         "done": false
       }
     ]
