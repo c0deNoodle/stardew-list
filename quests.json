@@ -37,7 +37,7 @@
     "title": "[Bday] Willy",
     "season": "Summer",
     "day": "24",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
