@@ -28,6 +28,19 @@
       },
       {
         "text": "Turn in Qi quest",
+        "done": true
+      }
+    ]
+  },
+  {
+    "id": "1000000000017",
+    "title": "[Bday] Leo",
+    "season": "Summer",
+    "day": "26",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
         "done": false
       }
     ]
@@ -41,19 +54,6 @@
     "subtasks": [
       {
         "text": "Catfish, Diamond, Iridium Bar, Mead, Octopus, Pumpkin, Sea Cucumber, Sturgeon",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000017",
-    "title": "[Bday] Leo",
-    "season": "Summer",
-    "day": "26",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
         "done": false
       }
     ]
