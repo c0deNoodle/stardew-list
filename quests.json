@@ -511,7 +511,7 @@
     "title": "[Bday] Jodi",
     "season": "Fall",
     "day": "11",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Chocolate Cake, Crispy Bass, Diamond, Eggplant Parmesan, Fried Eel, Pancakes, Rhubarb Pie, Vegetable Medley",
