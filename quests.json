@@ -21,6 +21,14 @@
       {
         "text": "Mines (cinder shards)",
         "done": false
+      },
+      {
+        "text": "Dupe mining statue for desert",
+        "done": false
+      },
+      {
+        "text": "Turn in Qi quest",
+        "done": false
       }
     ]
   },
@@ -29,7 +37,7 @@
     "title": "[Bday] Leo",
     "season": "Summer",
     "day": "26",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Duck Feather, Mango, Ostrich Egg, Poi.",
