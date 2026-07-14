@@ -446,7 +446,7 @@
     "title": "[Bday] George",
     "season": "Fall",
     "day": "24",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
