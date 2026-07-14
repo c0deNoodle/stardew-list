@@ -498,7 +498,7 @@
     "title": "[Bday] Abigail",
     "season": "Fall",
     "day": "13",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Amethyst, Banana Pudding, Blackberry Cobbler, Chocolate Cake, Monster Compendium, Pufferfish, Pumpkin, Spicy Eel",
