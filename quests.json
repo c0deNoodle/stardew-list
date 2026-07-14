@@ -524,7 +524,7 @@
     "title": "[Bday] Elliott",
     "season": "Fall",
     "day": "5",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
@@ -537,7 +537,7 @@
     "title": "[Bday] Penny",
     "season": "Fall",
     "day": "2",
-    "completed": true,
+    "completed": false,
     "subtasks": [
       {
         "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
