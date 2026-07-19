@@ -29,7 +29,7 @@
     "title": "[Bday] Penny",
     "season": "Fall",
     "day": "2",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Diamond, Emerald, Melon, Poppy, Poppyseed Muffin, Prismatic Shard, Red Plate, Roots Platter, Sandfish, Tom Kha Soup",
