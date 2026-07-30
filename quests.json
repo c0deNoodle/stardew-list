@@ -25,19 +25,6 @@
     ]
   },
   {
-    "id": "1000000000019",
-    "title": "[Bday] Elliott",
-    "season": "Fall",
-    "day": "5",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000020",
     "title": "[Bday] Jodi",
     "season": "Fall",
@@ -111,6 +98,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000019",
+    "title": "[Bday] Elliott",
+    "season": "Fall",
+    "day": "5",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Crab Cakes, Duck Feather, Lobster, Pomegranate, Tom Kha Soup, Golden Pumpkin",
         "done": false
       }
     ]
