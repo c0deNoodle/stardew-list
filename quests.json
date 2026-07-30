@@ -25,6 +25,45 @@
     ]
   },
   {
+    "id": "1000000000023",
+    "title": "[Bday] Marnie",
+    "season": "Fall",
+    "day": "18",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000024",
+    "title": "[Bday] Robin",
+    "season": "Fall",
+    "day": "21",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Goat Cheese, Peach, Spaghetti",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000025",
+    "title": "[Bday] George",
+    "season": "Fall",
+    "day": "24",
+    "completed": false,
+    "subtasks": [
+      {
+        "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
     "id": "1000000000020",
     "title": "[Bday] Jodi",
     "season": "Fall",
@@ -59,45 +98,6 @@
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000023",
-    "title": "[Bday] Marnie",
-    "season": "Fall",
-    "day": "18",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000024",
-    "title": "[Bday] Robin",
-    "season": "Fall",
-    "day": "21",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Goat Cheese, Peach, Spaghetti",
-        "done": false
-      }
-    ]
-  },
-  {
-    "id": "1000000000025",
-    "title": "[Bday] George",
-    "season": "Fall",
-    "day": "24",
-    "completed": false,
-    "subtasks": [
-      {
-        "text": "Fried Mushroom, Leek",
         "done": false
       }
     ]
