@@ -55,7 +55,7 @@
     "title": "[Bday] Sandy",
     "season": "Fall",
     "day": "15",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Crocus, Daffodil, Sweet Pea",
