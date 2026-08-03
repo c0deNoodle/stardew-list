@@ -25,19 +25,6 @@
     ]
   },
   {
-    "id": "1000000000023",
-    "title": "[Bday] Marnie",
-    "season": "Fall",
-    "day": "18",
-    "completed": true,
-    "subtasks": [
-      {
-        "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
-        "done": false
-      }
-    ]
-  },
-  {
     "id": "1000000000024",
     "title": "[Bday] Robin",
     "season": "Fall",
@@ -59,6 +46,19 @@
     "subtasks": [
       {
         "text": "Fried Mushroom, Leek",
+        "done": false
+      }
+    ]
+  },
+  {
+    "id": "1000000000023",
+    "title": "[Bday] Marnie",
+    "season": "Fall",
+    "day": "18",
+    "completed": true,
+    "subtasks": [
+      {
+        "text": "Diamond, Farmer's Lunch, Pink Cake, Pumpkin Pie, Rabbit's Foot",
         "done": false
       }
     ]
