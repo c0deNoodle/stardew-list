@@ -29,7 +29,7 @@
     "title": "[Bday] Robin",
     "season": "Fall",
     "day": "21",
-    "completed": false,
+    "completed": true,
     "subtasks": [
       {
         "text": "Goat Cheese, Peach, Spaghetti",
